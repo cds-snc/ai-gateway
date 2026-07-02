@@ -1,0 +1,11 @@
+{
+  "$schema": "https://www.getbifrost.ai/schema",
+  "governance": {
+    "auth_config": {
+      "is_enabled": true,
+      "admin_username": "calvin",
+      "admin_password": "jgyv4MQYLrib7ugD2URv",
+      "disable_auth_on_inference": false
+    }
+  }
+}
