@@ -218,3 +218,37 @@ resource "aws_s3_bucket_policy" "invocation_logs" {
     ]
   })
 }
+
+resource "aws_s3_bucket_policy" "alb_access_logs" {
+  bucket = module.alb_access_logs_bucket.s3_bucket_id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid    = "AllowAlbAccessLogsAclCheck"
+      Effect = "Allow"
+      Principal = {
+        Service = "logdelivery.elasticloadbalancing.amazonaws.com"
+      }
+      Action   = "s3:GetBucketAcl"
+      Resource = module.alb_access_logs_bucket.s3_bucket_arn
+      }, {
+      Sid    = "AllowAlbAccessLogsWrite"
+      Effect = "Allow"
+      Principal = {
+        Service = "logdelivery.elasticloadbalancing.amazonaws.com"
+      }
+      Action   = "s3:PutObject"
+      Resource = "${module.alb_access_logs_bucket.s3_bucket_arn}/${var.alb_access_logs_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      Condition = {
+        StringEquals = {
+          "aws:SourceAccount" = data.aws_caller_identity.current.account_id
+          "s3:x-amz-acl"      = "bucket-owner-full-control"
+        }
+        ArnLike = {
+          "aws:SourceArn" = "arn:${data.aws_partition.current.partition}:elasticloadbalancing:${var.primary_region}:${data.aws_caller_identity.current.account_id}:loadbalancer/*"
+        }
+      }
+    }]
+  })
+}

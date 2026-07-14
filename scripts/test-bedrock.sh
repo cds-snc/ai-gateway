@@ -1,4 +1,4 @@
-#/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
@@ -10,12 +10,11 @@ if [ "$#" -ne 2 ]; then
 fi
 
 KEY="$1"
-
 URL="$2"
 MODEL="us.anthropic.claude-haiku-4-5-20251001-v1:0"
 
- # Using Authorization header (OpenAI style)
-curl -X POST $URL/v1/chat/completions \
+# Using Authorization header (OpenAI style)
+curl -X POST "$URL/chat/completions" \
    -H "Authorization: Bearer $KEY" \
    -H "Content-Type: application/json" \
-   -d '{"model": "'$MODEL'", "messages": [{"role": "user", "content": "Write a 3 line poem?"}]}'
+    -d '{"model": "'$MODEL'", "messages": [{"role": "user", "content": "Write a 3 line poem?"}], "max_tokens": 128}'

@@ -1,4 +1,4 @@
-#/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
@@ -10,15 +10,8 @@ if [ "$#" -ne 2 ]; then
 fi
 
 KEY="$1"
-
 URL="$2"
-# Lists models across providers allowed by the virtual key
-curl -sS "$URL/v1/models" \
-  -H "x-bf-vk: $KEY"
-  
 
-# # Using Authorization header (OpenAI style)
-# curl -X POST http://localhost:8080/v1/chat/completions \
-#   -H "Authorization: Bearer $KEY" \
-#   -H "Content-Type: application/json" \
-#   -d '{"model": "", "messages": [...]}'
+# Lists models exposed by LiteLLM using OpenAI-compatible auth.
+curl -sS "$URL/models" \
+  -H "Authorization: Bearer $KEY"

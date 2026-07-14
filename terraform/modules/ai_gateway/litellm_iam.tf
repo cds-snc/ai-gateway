@@ -1,10 +1,4 @@
-# -----------------------------------------------------------------------------
-# BedrockConsumer-bifrost: ECS task role for the Bifrost AI gateway.
-# The name matches the StringLike condition on the Bedrock VPC endpoint policies
-# (arn:.../role/BedrockConsumer-*), so no endpoint policy changes are needed.
-# -----------------------------------------------------------------------------
-
-data "aws_iam_policy_document" "bifrost_task_assume" {
+data "aws_iam_policy_document" "litellm_task_assume" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -16,16 +10,16 @@ data "aws_iam_policy_document" "bifrost_task_assume" {
   }
 }
 
-resource "aws_iam_role" "bifrost_task" {
-  name               = "BedrockConsumer-bifrost"
-  assume_role_policy = data.aws_iam_policy_document.bifrost_task_assume.json
+resource "aws_iam_role" "litellm_task" {
+  name               = "BedrockConsumer-litellm"
+  assume_role_policy = data.aws_iam_policy_document.litellm_task_assume.json
 
   tags = local.common_tags
 }
 
-resource "aws_iam_role_policy" "bifrost_task" {
-  name = "BedrockConsumer-bifrost-policy"
-  role = aws_iam_role.bifrost_task.id
+resource "aws_iam_role_policy" "litellm_task" {
+  name = "BedrockConsumer-litellm-policy"
+  role = aws_iam_role.litellm_task.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -56,7 +50,22 @@ resource "aws_iam_role_policy" "bifrost_task" {
         Resource = "*"
       },
       {
-        # Required for ECS Exec (enable_execute_command = true)
+        Sid    = "AllowReadLiteLLMConfig"
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject"
+        ]
+        Resource = "${module.invocation_logs_bucket.s3_bucket_arn}/${var.litellm_config_s3_key}"
+      },
+      {
+        Sid    = "AllowDecryptLiteLLMConfig"
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt"
+        ]
+        Resource = [aws_kms_key.invocation_logs.arn]
+      },
+      {
         Sid    = "AllowSSMMessagesForExec"
         Effect = "Allow"
         Action = [
@@ -67,38 +76,40 @@ resource "aws_iam_role_policy" "bifrost_task" {
         ]
         Resource = "*"
       }
-      
     ]
   })
 }
 
-# -----------------------------------------------------------------------------
-# Extra policy document for the ECS task execution role that the CDS-SNC ECS
-# module auto-creates. This adds Secrets Manager + KMS permissions on top of
-# the ECR and CloudWatch permissions the module provides by default.
-# -----------------------------------------------------------------------------
-
-data "aws_iam_policy_document" "bifrost_exec_extra" {
+data "aws_iam_policy_document" "litellm_exec_extra" {
   statement {
-    sid    = "AllowGetEncryptionKey"
+    sid    = "AllowReadLiteLLMMasterKey"
     effect = "Allow"
     actions = [
       "secretsmanager:GetSecretValue"
     ]
-    resources = [aws_secretsmanager_secret.bifrost_encryption_key.arn]
+    resources = [aws_secretsmanager_secret.litellm_master_key.arn]
   }
 
   statement {
-    sid    = "AllowGetBifrostConfigJson"
+    sid    = "AllowReadLiteLLMDBPassword"
     effect = "Allow"
     actions = [
       "secretsmanager:GetSecretValue"
     ]
-    resources = [aws_secretsmanager_secret.bifrost_config_json.arn]
+    resources = [aws_secretsmanager_secret.litellm_db_password.arn]
   }
 
   statement {
-    sid    = "AllowDecryptEncryptionKey"
+    sid    = "AllowReadLiteLLMRedisAuthToken"
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+    resources = [aws_secretsmanager_secret.litellm_redis_auth_token.arn]
+  }
+
+  statement {
+    sid    = "AllowDecryptLiteLLMSecrets"
     effect = "Allow"
     actions = [
       "kms:Decrypt"
