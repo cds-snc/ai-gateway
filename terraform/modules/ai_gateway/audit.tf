@@ -12,6 +12,19 @@ module "invocation_logs_bucket" {
   tags = local.common_tags
 }
 
+module "alb_access_logs_bucket" {
+  source = "github.com/cds-snc/terraform-modules//S3?ref=main"
+
+  billing_tag_value = var.billing_tag_value
+  bucket_name       = "${var.name_prefix}-${data.aws_caller_identity.current.account_id}-${var.primary_region}-alb-access-logs"
+
+  versioning = {
+    enabled = false
+  }
+
+  tags = local.common_tags
+}
+
 resource "aws_cloudwatch_log_group" "invocation" {
   name              = "/aws/bedrock/${var.name_prefix}/invocations"
   retention_in_days = 365
@@ -30,7 +43,7 @@ resource "aws_bedrock_model_invocation_logging_configuration" "this" {
   depends_on = [aws_s3_bucket_policy.invocation_logs]
 
   logging_config {
-    text_data_delivery_enabled      = var.enable_prompt_and_completion_logging
+    text_data_delivery_enabled = var.enable_prompt_and_completion_logging
 
     s3_config {
       bucket_name = module.invocation_logs_bucket.s3_bucket_id
@@ -38,8 +51,8 @@ resource "aws_bedrock_model_invocation_logging_configuration" "this" {
     }
 
     cloudwatch_config {
-      log_group_name             = aws_cloudwatch_log_group.invocation.name
-      role_arn                   = aws_iam_role.bedrock_logging.arn
+      log_group_name = aws_cloudwatch_log_group.invocation.name
+      role_arn       = aws_iam_role.bedrock_logging.arn
     }
   }
 }
