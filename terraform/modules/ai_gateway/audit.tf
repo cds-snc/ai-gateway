@@ -29,14 +29,14 @@ resource "aws_cloudwatch_log_group" "invocation" {
   name              = "/aws/bedrock/${var.name_prefix}/invocations"
   retention_in_days = 365
   kms_key_id        = aws_kms_key.invocation_logs.arn
-  tags              = local.common_tags
+  tags              = merge(local.common_tags, { ssc_cbrid = "22DH" })
 }
 
 resource "aws_cloudwatch_log_group" "guardrail_events" {
   name              = "/aws/bedrock/${var.name_prefix}/guardrail-events"
   retention_in_days = 365
   kms_key_id        = aws_kms_key.invocation_logs.arn
-  tags              = local.common_tags
+  tags              = merge(local.common_tags, { ssc_cbrid = "22DH" })
 }
 
 resource "aws_bedrock_model_invocation_logging_configuration" "this" {

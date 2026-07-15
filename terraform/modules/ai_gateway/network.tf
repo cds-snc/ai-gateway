@@ -44,7 +44,7 @@ resource "aws_vpc_endpoint" "bedrock_runtime" {
     }]
   })
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, { ssc_cbrid = "22DH" })
 }
 
 resource "aws_vpc_endpoint" "bedrock_agent_runtime" {
@@ -70,7 +70,7 @@ resource "aws_vpc_endpoint" "bedrock_agent_runtime" {
     }]
   })
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, { ssc_cbrid = "22DH" })
 }
 
 
@@ -93,7 +93,7 @@ resource "aws_security_group" "vpce" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, { ssc_cbrid = "22DH" })
 }
 
 locals {
@@ -206,7 +206,10 @@ resource "aws_security_group" "litellm_ecs" {
   description = "Allow inbound from ALB and outbound to Bedrock endpoints, RDS, and Redis"
   vpc_id      = module.gateway_vpc.vpc_id
 
-  tags = merge(local.common_tags, { Name = "${var.name_prefix}-litellm-ecs-sg" })
+  tags = merge(local.common_tags, {
+    Name       = "${var.name_prefix}-litellm-ecs-sg"
+    ssc_cbrid  = "22DH"
+  })
 }
 
 resource "aws_security_group_rule" "litellm_ecs_ingress_from_alb" {
@@ -255,7 +258,10 @@ resource "aws_security_group" "litellm_redis" {
   description = "Allow Redis ingress from LiteLLM ECS tasks only"
   vpc_id      = module.gateway_vpc.vpc_id
 
-  tags = merge(local.common_tags, { Name = "${var.name_prefix}-litellm-redis-sg" })
+  tags = merge(local.common_tags, {
+    Name       = "${var.name_prefix}-litellm-redis-sg"
+    ssc_cbrid  = "22DH"
+  })
 }
 
 # Dedicated SG attached to Aurora cluster for ECS access on 5432.
@@ -268,7 +274,10 @@ resource "aws_security_group" "litellm_rds" {
     prevent_destroy = true
   }
 
-  tags = merge(local.common_tags, { Name = "${var.name_prefix}-litellm-rds-sg" })
+  tags = merge(local.common_tags, {
+    Name       = "${var.name_prefix}-litellm-rds-sg"
+    ssc_cbrid  = "22DH"
+  })
 }
 
 resource "aws_security_group_rule" "litellm_rds_ingress_from_ecs" {

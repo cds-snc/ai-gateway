@@ -4,7 +4,10 @@ resource "aws_security_group" "litellm_alb" {
   description = "Allow inbound HTTP to the LiteLLM ALB"
   vpc_id      = module.gateway_vpc.vpc_id
 
-  tags = merge(local.common_tags, { Name = "${var.name_prefix}-litellm-alb-sg" })
+  tags = merge(local.common_tags, {
+    Name       = "${var.name_prefix}-litellm-alb-sg"
+    ssc_cbrid  = "22DH"
+  })
 }
 
 resource "aws_security_group_rule" "litellm_alb_ingress_http" {
@@ -54,7 +57,10 @@ resource "aws_lb" "litellm" {
     enabled = var.enable_alb_access_logs
   }
 
-  tags = merge(local.common_tags, { Name = "${var.name_prefix}-litellm" })
+  tags = merge(local.common_tags, {
+    Name       = "${var.name_prefix}-litellm"
+    ssc_cbrid  = "22DH"
+  })
 }
 
 # Target group for LiteLLM on port 4000
@@ -77,7 +83,10 @@ resource "aws_lb_target_group" "litellm" {
     matcher             = "200"
   }
 
-  tags = merge(local.common_tags, { Name = "${var.name_prefix}-litellm" })
+  tags = merge(local.common_tags, {
+    Name       = "${var.name_prefix}-litellm"
+    ssc_cbrid  = "22DH"
+  })
 }
 
 resource "aws_lb_listener" "litellm_http_redirect" {
@@ -95,7 +104,10 @@ resource "aws_lb_listener" "litellm_http_redirect" {
     }
   }
 
-  tags = merge(local.common_tags, { Name = "${var.name_prefix}-litellm-http-redirect" })
+  tags = merge(local.common_tags, {
+    Name       = "${var.name_prefix}-litellm-http-redirect"
+    ssc_cbrid  = "22DH"
+  })
 }
 
 resource "aws_lb_listener" "litellm_https" {
@@ -110,7 +122,10 @@ resource "aws_lb_listener" "litellm_https" {
     target_group_arn = aws_lb_target_group.litellm.arn
   }
 
-  tags = merge(local.common_tags, { Name = "${var.name_prefix}-litellm-https" })
+  tags = merge(local.common_tags, {
+    Name       = "${var.name_prefix}-litellm-https"
+    ssc_cbrid  = "22DH"
+  })
 }
 
 output "litellm_url" {
