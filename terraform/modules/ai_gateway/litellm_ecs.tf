@@ -19,7 +19,7 @@ locals {
 }
 
 module "litellm" {
-  source = "github.com/cds-snc/terraform-modules//ecs?ref=main"
+  source = "github.com/cds-snc/terraform-modules//ecs?ref=v11.4.4"
 
   depends_on = [
     module.litellm_rds,

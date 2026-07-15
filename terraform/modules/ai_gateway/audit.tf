@@ -1,5 +1,5 @@
 module "invocation_logs_bucket" {
-  source = "github.com/cds-snc/terraform-modules//S3?ref=main"
+  source = "github.com/cds-snc/terraform-modules//S3?ref=v11.4.4"
 
   billing_tag_value = var.billing_tag_value
   bucket_name       = "${var.name_prefix}-${data.aws_caller_identity.current.account_id}-${var.primary_region}-invocation-logs"
@@ -13,7 +13,7 @@ module "invocation_logs_bucket" {
 }
 
 module "alb_access_logs_bucket" {
-  source = "github.com/cds-snc/terraform-modules//S3?ref=main"
+  source = "github.com/cds-snc/terraform-modules//S3?ref=v11.4.4"
 
   billing_tag_value = var.billing_tag_value
   bucket_name       = "${var.name_prefix}-${data.aws_caller_identity.current.account_id}-${var.primary_region}-alb-access-logs"
