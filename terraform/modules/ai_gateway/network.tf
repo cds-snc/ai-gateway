@@ -1,6 +1,6 @@
 
 module "gateway_vpc" {
-  source = "github.com/cds-snc/terraform-modules//vpc?ref=main"
+  source = "github.com/cds-snc/terraform-modules//vpc?ref=v11.4.4"
 
   name               = var.name_prefix
   billing_tag_value  = var.billing_tag_value

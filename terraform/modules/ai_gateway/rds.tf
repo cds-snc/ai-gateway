@@ -4,7 +4,7 @@ data "aws_secretsmanager_secret_version" "litellm_rds_password" {
 }
 
 module "litellm_rds" {
-  source = "github.com/cds-snc/terraform-modules//rds?ref=main"
+  source = "github.com/cds-snc/terraform-modules//rds?ref=v11.4.4"
 
   name              = "litellm"
   database_name     = var.litellm_database_name
