@@ -6,7 +6,7 @@
 
 inputs = {
 	name_prefix         = "ai-gateway"
-	billing_tag_value   = "innovation"
+	billing_tag_value   = "SRE"
 	data_classification = "unclassified"
 	primary_region      = "ca-central-1"
 
