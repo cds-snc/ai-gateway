@@ -3,7 +3,7 @@ resource "aws_kms_key" "invocation_logs" {
   description             = "KMS key for Bedrock invocation logs"
   deletion_window_in_days = 30
   enable_key_rotation     = true
-  tags                    = local.common_tags
+  tags                    = merge(local.common_tags, { ssc_cbrid = "22DH" })
 
   policy = jsonencode({
     Version = "2012-10-17"

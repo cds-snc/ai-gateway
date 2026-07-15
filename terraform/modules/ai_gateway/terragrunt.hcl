@@ -15,8 +15,9 @@ generate "provider" {
       default_tags {
         tags = {
           purpose             = "ai-gateway"
-          data-classification = "protected-b"
+          data-classification = "unclassified"
           managed-by          = "terraform"
+           ssc_cbrid = "22DI"
         }
       }
     }

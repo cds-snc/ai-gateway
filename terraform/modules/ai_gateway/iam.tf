@@ -12,7 +12,7 @@ resource "aws_iam_role" "bedrock_logging" {
     }]
   })
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, { ssc_cbrid = "22DH" })
 }
 
 resource "aws_iam_role_policy" "bedrock_logging" {
@@ -77,7 +77,7 @@ resource "aws_iam_role" "bedrock_consumer_team_alpha" {
     }]
   })
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, { ssc_cbrid = "22DH" })
 }
 
 resource "aws_iam_role_policy" "bedrock_consumer_team_alpha" {
@@ -139,7 +139,7 @@ resource "aws_iam_policy" "assume_bedrock_consumer_team_alpha" {
     }]
   })
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, { ssc_cbrid = "22DH" })
 }
 
 # NOTE: aws_iam_policy.assume_bedrock_consumer_team_alpha (above) must be attached

@@ -14,7 +14,7 @@ resource "aws_iam_role" "litellm_task" {
   name               = "BedrockConsumer-litellm"
   assume_role_policy = data.aws_iam_policy_document.litellm_task_assume.json
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, { ssc_cbrid = "22DH" })
 }
 
 resource "aws_iam_role_policy" "litellm_task" {
