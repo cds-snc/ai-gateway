@@ -5,6 +5,22 @@ locals {
   env_config          = try(read_terragrunt_config("${get_terragrunt_dir()}/staging.hcl"), { inputs = {} })
 }
 
+remote_state {
+  backend = "s3"
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
+  config = {
+    encrypt             = true
+    bucket              = "ai-gateway-staging-tf"
+    use_lockfile        = true
+    region              = "ca-central-1"
+    key                 = "./terraform.tfstate"
+    s3_bucket_tags      = { ssc_cbrid = "22DH" }
+    dynamodb_table_tags = { ssc_cbrid = "22DI" }
+  }
+}
 
 generate "provider" {
   path      = "provider.tf"
@@ -18,7 +34,7 @@ generate "provider" {
           purpose             = "ai-gateway"
           data-classification = "unclassified"
           managed-by          = "terraform"
-           ssc_cbrid = "22DI"
+          ssc_cbrid = "22DI"
         }
       }
     }
