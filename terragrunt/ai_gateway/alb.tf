@@ -5,8 +5,8 @@ resource "aws_security_group" "litellm_alb" {
   vpc_id      = module.gateway_vpc.vpc_id
 
   tags = merge(local.common_tags, {
-    Name       = "${var.name_prefix}-litellm-alb-sg"
-    ssc_cbrid  = "22DH"
+    Name      = "${var.name_prefix}-litellm-alb-sg"
+    ssc_cbrid = "22DH"
   })
 }
 
@@ -58,8 +58,8 @@ resource "aws_lb" "litellm" {
   }
 
   tags = merge(local.common_tags, {
-    Name       = "${var.name_prefix}-litellm"
-    ssc_cbrid  = "22DH"
+    Name      = "${var.name_prefix}-litellm"
+    ssc_cbrid = "22DH"
   })
 }
 
@@ -84,8 +84,8 @@ resource "aws_lb_target_group" "litellm" {
   }
 
   tags = merge(local.common_tags, {
-    Name       = "${var.name_prefix}-litellm"
-    ssc_cbrid  = "22DH"
+    Name      = "${var.name_prefix}-litellm"
+    ssc_cbrid = "22DH"
   })
 }
 
@@ -105,8 +105,8 @@ resource "aws_lb_listener" "litellm_http_redirect" {
   }
 
   tags = merge(local.common_tags, {
-    Name       = "${var.name_prefix}-litellm-http-redirect"
-    ssc_cbrid  = "22DH"
+    Name      = "${var.name_prefix}-litellm-http-redirect"
+    ssc_cbrid = "22DH"
   })
 }
 
@@ -123,8 +123,8 @@ resource "aws_lb_listener" "litellm_https" {
   }
 
   tags = merge(local.common_tags, {
-    Name       = "${var.name_prefix}-litellm-https"
-    ssc_cbrid  = "22DH"
+    Name      = "${var.name_prefix}-litellm-https"
+    ssc_cbrid = "22DH"
   })
 }
 
