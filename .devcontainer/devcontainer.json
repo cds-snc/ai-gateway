@@ -5,10 +5,25 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/base:trixie",
 	"features": {
-		"ghcr.io/devcontainers/features/aws-cli:1": {},
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers/features/terraform:1": {},
-		"ghcr.io/postfinance/devcontainer-features/docker-out:1": {}
+		"ghcr.io/devcontainers/features/aws-cli:1": {
+			"verbose": true,
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/terraform:1": {
+			"version": "1.4.4",
+			"tflint": "0.47.0",
+			"terragrunt": "1.1.1"
+		},
+		"ghcr.io/postfinance/devcontainer-features/docker-out:1": {
+			"version": "latest",
+			"composeVersion": "latest",
+			"buildxVersion": "latest",
+			"configPath": "none"
+		}
 	},
 	"forwardPorts": [4566]
 	// Features to add to the dev container. More info: https://containers.dev/features.

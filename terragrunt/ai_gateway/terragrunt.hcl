@@ -2,6 +2,7 @@ locals {
   aws_region          = get_env("AWS_REGION", "ca-central-1")
   aws_account_id      = get_env("AWS_ACCOUNT_ID", "123456789012")
   tf_state_key_prefix = "ai-gateway"
+  env_config          = try(read_terragrunt_config("${get_terragrunt_dir()}/staging.hcl"), { inputs = {} })
 }
 
 
@@ -27,3 +28,5 @@ generate "provider" {
 terraform {
   source = "."
 }
+
+inputs = local.env_config.inputs

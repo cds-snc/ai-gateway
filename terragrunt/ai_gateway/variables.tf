@@ -217,24 +217,22 @@ litellm_settings:
   EOT
 }
 
-variable "litellm_master_key_placeholder" {
-  description = "Placeholder value for LiteLLM master key secret. Must start with sk-."
-  type        = string
-  default     = "sk-CHANGE-ME-BEFORE-APPLY"
-}
-
-variable "litellm_db_password_placeholder" {
-  description = "Placeholder value for LiteLLM database password secret."
+variable "litellm_master_key" {
+  description = "LiteLLM master key secret value. Must start with sk-."
   type        = string
   sensitive   = true
-  default     = "CHANGE_ME_BEFORE_APPLY"
 }
 
-variable "litellm_redis_auth_token_placeholder" {
-  description = "Placeholder value for LiteLLM Redis auth token secret."
+variable "litellm_db_password" {
+  description = "LiteLLM database password secret value."
   type        = string
   sensitive   = true
-  default     = "CHANGE_ME_BEFORE_APPLY"
+}
+
+variable "litellm_redis_auth_token" {
+  description = "LiteLLM Redis auth token secret value."
+  type        = string
+  sensitive   = true
 }
 
 variable "litellm_local_model_cost_map" {

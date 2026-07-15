@@ -11,7 +11,7 @@ resource "aws_secretsmanager_secret" "litellm_master_key" {
 
 resource "aws_secretsmanager_secret_version" "litellm_master_key" {
   secret_id     = aws_secretsmanager_secret.litellm_master_key.id
-  secret_string = var.litellm_master_key_placeholder
+  secret_string = var.litellm_master_key
 }
 
 resource "aws_secretsmanager_secret" "litellm_db_password" {
@@ -27,7 +27,7 @@ resource "aws_secretsmanager_secret" "litellm_db_password" {
 
 resource "aws_secretsmanager_secret_version" "litellm_db_password" {
   secret_id     = aws_secretsmanager_secret.litellm_db_password.id
-  secret_string = var.litellm_db_password_placeholder
+  secret_string = var.litellm_db_password
 }
 
 resource "aws_secretsmanager_secret" "litellm_redis_auth_token" {
@@ -43,5 +43,5 @@ resource "aws_secretsmanager_secret" "litellm_redis_auth_token" {
 
 resource "aws_secretsmanager_secret_version" "litellm_redis_auth_token" {
   secret_id     = aws_secretsmanager_secret.litellm_redis_auth_token.id
-  secret_string = var.litellm_redis_auth_token_placeholder
+  secret_string = var.litellm_redis_auth_token
 }
