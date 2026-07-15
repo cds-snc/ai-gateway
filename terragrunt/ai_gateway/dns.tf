@@ -40,8 +40,7 @@ resource "aws_acm_certificate" "gateway" {
 resource "aws_route53_record" "gateway_certificate_validation" {
   for_each = (
     local.gateway_dns_enabled &&
-    var.gateway_certificate_arn == "" &&
-    local.gateway_hosted_zone_id != null
+    var.gateway_certificate_arn == ""
     ) ? {
     for dvo in aws_acm_certificate.gateway[0].domain_validation_options :
     dvo.domain_name => {
@@ -62,8 +61,7 @@ resource "aws_route53_record" "gateway_certificate_validation" {
 resource "aws_acm_certificate_validation" "gateway" {
   count = (
     local.gateway_dns_enabled &&
-    var.gateway_certificate_arn == "" &&
-    local.gateway_hosted_zone_id != null
+    var.gateway_certificate_arn == ""
   ) ? 1 : 0
 
   certificate_arn         = aws_acm_certificate.gateway[0].arn
@@ -71,7 +69,7 @@ resource "aws_acm_certificate_validation" "gateway" {
 }
 
 resource "aws_route53_record" "gateway_alias_a" {
-  count = (local.gateway_dns_enabled && local.gateway_hosted_zone_id != null) ? 1 : 0
+  count = local.gateway_dns_enabled ? 1 : 0
 
   zone_id = local.gateway_hosted_zone_id
   name    = var.gateway_domain_name
@@ -85,7 +83,7 @@ resource "aws_route53_record" "gateway_alias_a" {
 }
 
 resource "aws_route53_record" "gateway_alias_aaaa" {
-  count = (local.gateway_dns_enabled && local.gateway_hosted_zone_id != null) ? 1 : 0
+  count = local.gateway_dns_enabled ? 1 : 0
 
   zone_id = local.gateway_hosted_zone_id
   name    = var.gateway_domain_name
