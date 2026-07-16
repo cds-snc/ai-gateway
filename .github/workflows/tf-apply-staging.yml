@@ -71,8 +71,9 @@ jobs:
     needs: [terragrunt-apply]
     if: failure()
     uses: ./.github/workflows/workflow-failure.yml
-    environment: staging
     secrets:
       LOG_ANALYTICS_WORKSPACE_ID: ${{ secrets.LOG_ANALYTICS_WORKSPACE_ID }}
       LOG_ANALYTICS_WORKSPACE_KEY: ${{ secrets.LOG_ANALYTICS_WORKSPACE_KEY }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      environment: staging
