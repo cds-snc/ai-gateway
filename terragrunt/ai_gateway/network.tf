@@ -207,8 +207,8 @@ resource "aws_security_group" "litellm_ecs" {
   vpc_id      = module.gateway_vpc.vpc_id
 
   tags = merge(local.common_tags, {
-    Name       = "${var.name_prefix}-litellm-ecs-sg"
-    ssc_cbrid  = "22DH"
+    Name      = "${var.name_prefix}-litellm-ecs-sg"
+    ssc_cbrid = "22DH"
   })
 }
 
@@ -259,8 +259,8 @@ resource "aws_security_group" "litellm_redis" {
   vpc_id      = module.gateway_vpc.vpc_id
 
   tags = merge(local.common_tags, {
-    Name       = "${var.name_prefix}-litellm-redis-sg"
-    ssc_cbrid  = "22DH"
+    Name      = "${var.name_prefix}-litellm-redis-sg"
+    ssc_cbrid = "22DH"
   })
 }
 
@@ -275,8 +275,8 @@ resource "aws_security_group" "litellm_rds" {
   }
 
   tags = merge(local.common_tags, {
-    Name       = "${var.name_prefix}-litellm-rds-sg"
-    ssc_cbrid  = "22DH"
+    Name      = "${var.name_prefix}-litellm-rds-sg"
+    ssc_cbrid = "22DH"
   })
 }
 
