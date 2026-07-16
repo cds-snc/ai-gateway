@@ -9,10 +9,6 @@ on:
         required: true
       SLACK_WEBHOOK_URL:
         required: true
-    inputs:
-      environment:
-        required: true
-        type: string
 
 permissions:
   contents: none

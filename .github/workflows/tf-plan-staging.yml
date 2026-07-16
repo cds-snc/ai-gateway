@@ -23,7 +23,6 @@ jobs:
   terraform-plan:
 
     runs-on: ubuntu-latest
-    environment: staging
     permissions:
       id-token: write
       contents: read
