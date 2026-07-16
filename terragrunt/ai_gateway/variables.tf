@@ -186,35 +186,9 @@ variable "litellm_config_s3_key" {
 }
 
 variable "litellm_config_yaml" {
-  description = "LiteLLM proxy config YAML uploaded to S3."
+  description = "Path to the LiteLLM proxy config YAML uploaded to S3, relative to this module."
   type        = string
-  default     = <<-EOT
-model_list:
-  - model_name: claude-sonnet-4
-    litellm_params:
-      model: bedrock/anthropic.claude-sonnet-4-20250514-v1:0
-  - model_name: claude-haiku
-    litellm_params:
-      model: bedrock/anthropic.claude-3-5-haiku-20241022-v1:0
-
-router_settings:
-  redis_host: os.environ/REDIS_HOST
-  redis_port: os.environ/REDIS_PORT
-  redis_password: os.environ/REDIS_PASSWORD
-
-general_settings:
-  use_redis_transaction_buffer: true
-  master_key: os.environ/LITELLM_MASTER_KEY
-  database_url: os.environ/DATABASE_URL
-
-litellm_settings:
-  cache: true
-  cache_params:
-    type: redis
-    host: os.environ/REDIS_HOST
-    port: os.environ/REDIS_PORT
-    password: os.environ/REDIS_PASSWORD
-  EOT
+  default     = "configuration_files/litellm_config.yaml"
 }
 
 variable "litellm_master_key" {
