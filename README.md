@@ -85,10 +85,21 @@ Run these from the repository root as needed:
 bash scripts/list-models.sh <virtual_key> <litellm_base_url>
 ```
 
-- Send a sample chat completion request through LiteLLM:
+- Provision a new LiteLLM virtual key restricted to the Haiku model alias from `config.yaml`:
 
 ```bash
-bash scripts/test-bedrock.sh <virtual_key> <litellm_base_url>
+./scripts/create_virtual_key.sh \
+  --url <litellm_base_url> \
+  --duration 30d \
+  --key-alias haiku-client
+```
+
+- Send a test chat completion request through a virtual key:
+
+```bash
+./scripts/test_virtual_key.sh \
+  --key <virtual_key> \
+  --url <litellm_base_url>
 ```
 
 - List Bedrock inference-capable models or profiles in Canadian regions:
@@ -108,6 +119,20 @@ bash scripts/list_ca_inference_models.sh
   --target-group-arn <target-group-arn>
 ```
 
+- Scale the LiteLLM ECS service to a specific desired task count:
+
+```bash
+bash scripts/set_ecs_task_desired_count.sh <desired_count>
+```
+
+- Force a new ECS deployment so tasks restart and reload the S3-backed config:
+
+```bash
+./scripts/restart_litellm.sh
+# return immediately without waiting for stabilization
+./scripts/restart_litellm.sh --no-wait
+```
+
 - Generate Terraform import commands for existing resources:
 
 ```bash
@@ -121,5 +146,5 @@ Basic post-deploy checks:
 - `terragrunt plan` completes without unexpected changes
 - the ALB DNS name resolves and targets become healthy
 - `scripts/list-models.sh` returns model IDs with a valid virtual key
-- `scripts/test-bedrock.sh` returns a successful response
+- `scripts/test_virtual_key.sh` returns a successful response
 - `scripts/verify_public_reachability.sh` reports a passing result
