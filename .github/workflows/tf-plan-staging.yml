@@ -57,7 +57,7 @@ jobs:
           role-session-name: TFPlan
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Terraform plan
+      - name: Terraform Plan
         uses: cds-snc/terraform-plan@529b272050a8f718d14c59e62b59c124eead7efc # v5.0.4
         with:
           comment-delete: true
