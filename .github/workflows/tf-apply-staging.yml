@@ -54,6 +54,9 @@ jobs:
           TF_SUMMARIZE_VERSION: NONE
           TRUFFLEHOG_VERSION: NONE
 
+      - name: Validate YAML indentation (no tabs)
+        run: ./scripts/check_yaml_tabs.sh
+
       - name: configure aws credentials using OIDC
         uses: aws-actions/configure-aws-credentials@254c19bd240aabef8777f48595e9d2d7b972184b # v6.2.1
         with:
