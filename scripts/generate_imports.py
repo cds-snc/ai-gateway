@@ -7,7 +7,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -124,6 +124,32 @@ def run_cmd(command: Sequence[str], cwd: Path) -> str:
 def terragrunt_render(stack_dir: Path) -> Dict[str, Any]:
     output = run_cmd(["terragrunt", "render", "--format", "json", "--no-color"], cwd=stack_dir)
     return json.loads(output)
+
+
+def terragrunt_state_list(stack_dir: Path) -> Set[str]:
+    completed = subprocess.run(
+        ["terragrunt", "state", "list", "-no-color"],
+        cwd=str(stack_dir),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    if completed.returncode != 0:
+        message = (completed.stderr.strip() or completed.stdout.strip()).lower()
+        no_state_markers = (
+            "no state file was found",
+            "no stored state was found",
+            "state snapshot was created by terraform",
+        )
+        if any(marker in message for marker in no_state_markers):
+            return set()
+        raise ImportGeneratorError(
+            "Command failed (terragrunt state list -no-color):\n"
+            f"{completed.stderr.strip() or completed.stdout.strip()}"
+        )
+
+    return {line.strip() for line in completed.stdout.splitlines() if line.strip()}
 
 
 def ensure_module_manifest(stack_dir: Path) -> Path:
@@ -384,7 +410,10 @@ class Generator:
             )["RouteTables"],
             f"default route table for {vpc_id}",
         )
-        self.add("module.gateway_vpc.aws_default_route_table.default", default_rt["RouteTableId"])
+        self.skip(
+            "module.gateway_vpc.aws_default_route_table.default",
+            "aws_default_route_table import can return empty-result in this environment; allow Terraform to adopt/manage default route table without explicit import.",
+        )
 
         igw = self.require_one(
             self.aws.ec2.describe_internet_gateways(
@@ -458,7 +487,10 @@ class Generator:
         )
         self.add("module.gateway_vpc.aws_route_table.private[0]", private_rt["RouteTableId"])
         self.add("module.gateway_vpc.aws_route_table.public", public_rt["RouteTableId"])
-        self.add("module.gateway_vpc.aws_route.private_nat_gateway[0]", route_import_id(private_rt["RouteTableId"], "0.0.0.0/0"))
+        self.skip(
+            "module.gateway_vpc.aws_route.private_nat_gateway[0]",
+            "Import can return empty-result provider error in this environment; allow Terraform to adopt/manage this route without explicit import.",
+        )
         self.add("module.gateway_vpc.aws_route.public_internet_gateway", route_import_id(public_rt["RouteTableId"], "0.0.0.0/0"))
 
         private_subnet_ids = [
@@ -670,8 +702,14 @@ class Generator:
 
         self.add("aws_cloudwatch_log_group.invocation", f"/aws/bedrock/{self.name_prefix}/invocations")
         self.add("aws_cloudwatch_log_group.guardrail_events", f"/aws/bedrock/{self.name_prefix}/guardrail-events")
-        self.add("aws_bedrock_model_invocation_logging_configuration.this", self.region)
-        self.add("aws_cloudtrail.bedrock_audit", f"{self.name_prefix}-bedrock-audit")
+        self.skip(
+            "aws_bedrock_model_invocation_logging_configuration.this",
+            "Import often returns empty result when account-level Bedrock logging config is absent or not yet readable; allow Terraform to create/manage it.",
+        )
+        self.add(
+            "aws_cloudtrail.bedrock_audit",
+            f"arn:aws:cloudtrail:{self.region}:{self.account_id}:trail/{self.name_prefix}-bedrock-audit",
+        )
         self.add("aws_s3_bucket_policy.invocation_logs", invocation_bucket)
         self.add("aws_s3_bucket_policy.alb_access_logs", alb_bucket)
         self.add("aws_s3_object.litellm_config", f"{invocation_bucket}/{self.inputs['litellm_config_s3_key']}")
@@ -841,6 +879,10 @@ def main(argv: Sequence[str]) -> int:
     generator = Generator(stack_dir, aws, rendered, module_manifest)
     imports, skipped = generator.generate()
 
+    existing_addresses = terragrunt_state_list(stack_dir)
+    already_imported = [block.address for block in imports if block.address in existing_addresses]
+    imports = [block for block in imports if block.address not in existing_addresses]
+
     args.output.write_text(render_import_file(imports), encoding="utf-8")
     write_json(
         args.report,
@@ -850,11 +892,15 @@ def main(argv: Sequence[str]) -> int:
             "stack_dir": str(stack_dir),
             "output": str(args.output),
             "import_count": len(imports),
+            "already_imported_count": len(already_imported),
+            "already_imported": already_imported,
             "skipped": skipped,
         },
     )
 
     print(f"Wrote {len(imports)} import blocks to {args.output}")
+    if already_imported:
+        print(f"Excluded {len(already_imported)} resources already present in state")
     if skipped:
         print(f"Recorded {len(skipped)} skipped resources in {args.report}")
     return 0
