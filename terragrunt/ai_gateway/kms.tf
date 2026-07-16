@@ -29,15 +29,25 @@ resource "aws_kms_key" "invocation_logs" {
           "kms:ReEncrypt*",
           "kms:GenerateDataKey",
           "kms:GenerateDataKeyWithoutPlaintext",
-          "kms:DescribeKey",
           "kms:CreateGrant"
         ]
         Resource = "*"
         Condition = {
-          ArnLike = {
+          StringLike = {
             "kms:EncryptionContext:aws:logs:arn" = "arn:${data.aws_partition.current.partition}:logs:${var.primary_region}:${data.aws_caller_identity.current.account_id}:log-group:*"
           }
         }
+      },
+      {
+        Sid    = "AllowCloudWatchLogsToDescribeKey"
+        Effect = "Allow"
+        Principal = {
+          Service = "logs.${var.primary_region}.amazonaws.com"
+        }
+        Action = [
+          "kms:DescribeKey"
+        ]
+        Resource = "*"
       },
       {
         Sid    = "AllowBedrockServiceToUseKey"
@@ -126,8 +136,7 @@ resource "aws_kms_key" "invocation_logs" {
           AWS = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/ai-gateway-plan"
         }
         Action = [
-          "kms:Decrypt",
-          "kms:DescribeKey"
+          "kms:Decrypt"
         ]
         Resource = "*"
         Condition = {
@@ -139,6 +148,29 @@ resource "aws_kms_key" "invocation_logs" {
             "kms:EncryptionContext:SecretARN" = "arn:${data.aws_partition.current.partition}:secretsmanager:${var.primary_region}:${data.aws_caller_identity.current.account_id}:secret:${var.name_prefix}/litellm/*"
           }
         }
+      },
+      {
+        Sid    = "AllowTerraformPlanRoleToDescribeKey"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/ai-gateway-plan"
+        }
+        Action = [
+          "kms:DescribeKey"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "AllowLiteLLMTaskRoleToDecryptConfigAndSecrets"
+        Effect = "Allow"
+        Principal = {
+          AWS = aws_iam_role.litellm_task.arn
+        }
+        Action = [
+          "kms:Decrypt",
+          "kms:DescribeKey"
+        ]
+        Resource = "*"
       }
     ]
   })
