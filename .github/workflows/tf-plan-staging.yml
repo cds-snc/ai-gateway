@@ -50,14 +50,14 @@ jobs:
           TERRAFORM_VERSION: 1.15.5
           TERRAGRUNT_VERSION: 1.1.1
 
-      - name: configure aws credentials using OIDC
+      - name: configure the aws credentials using OIDC
         uses: aws-actions/configure-aws-credentials@254c19bd240aabef8777f48595e9d2d7b972184b # v6.2.1
         with:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ai-gateway-plan
           role-session-name: TFPlan
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Terraform plan
+      - name: Terraform Plan
         uses: cds-snc/terraform-plan@529b272050a8f718d14c59e62b59c124eead7efc # v5.0.4
         with:
           comment-delete: true
