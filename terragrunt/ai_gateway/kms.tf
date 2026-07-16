@@ -118,6 +118,27 @@ resource "aws_kms_key" "invocation_logs" {
             "aws:SourceAccount" = data.aws_caller_identity.current.account_id
           }
         }
+      },
+      {
+        Sid    = "AllowTerraformPlanRoleToDecryptLitellmSecrets"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/ai-gateway-plan"
+        }
+        Action = [
+          "kms:Decrypt",
+          "kms:DescribeKey"
+        ]
+        Resource = "*"
+        Condition = {
+          StringEquals = {
+            "kms:CallerAccount" = data.aws_caller_identity.current.account_id
+            "kms:ViaService"    = "secretsmanager.${var.primary_region}.amazonaws.com"
+          }
+          ArnLike = {
+            "kms:EncryptionContext:SecretARN" = "arn:${data.aws_partition.current.partition}:secretsmanager:${var.primary_region}:${data.aws_caller_identity.current.account_id}:secret:${var.name_prefix}/litellm/*"
+          }
+        }
       }
     ]
   })
