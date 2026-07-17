@@ -38,7 +38,7 @@ for region in "${CA_REGIONS[@]}"; do
 
   aws bedrock list-foundation-models \
     --region "$region" \
-    --query 'modelSummaries[?contains(inferenceTypesSupported, `ON_DEMAND`) || contains(inferenceTypesSupported, `PROVISIONED`)].[modelId,modelName,providerName,inferenceTypesSupported[0]]' \
+    --query "modelSummaries[?contains(inferenceTypesSupported, \`ON_DEMAND\`) || contains(inferenceTypesSupported, \`PROVISIONED\`)].[modelId,modelName,providerName,inferenceTypesSupported[0]]" \
     --output table 2>/dev/null \
   || echo "  (no results or access denied for $region)"
 done
