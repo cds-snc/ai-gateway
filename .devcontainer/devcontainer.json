@@ -22,12 +22,7 @@
 			"tflint": "0.47.0",
 			"terragrunt": "1.1.1"
 		},
-		"ghcr.io/postfinance/devcontainer-features/docker-out:1": {
-			"version": "latest",
-			"composeVersion": "latest",
-			"buildxVersion": "latest",
-			"configPath": "none"
-		}
+		"ghcr.io/cds-snc/devcontainer-features/ripgrep:1": {}
 	},
 	"forwardPorts": [4566]
 	// Features to add to the dev container. More info: https://containers.dev/features.
