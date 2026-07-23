@@ -15,6 +15,7 @@ locals {
     data.aws_secretsmanager_secret_version.litellm_db_password.version_id,
     data.aws_secretsmanager_secret_version.litellm_master_key.version_id,
     data.aws_secretsmanager_secret_version.litellm_redis_auth_token.version_id,
+    filemd5("${path.module}/${var.litellm_config_yaml}"),
   ]))
 }
 
