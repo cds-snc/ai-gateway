@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-
 LITELLM_BASE_URL="${LITELLM_BASE_URL:-}"
 AWS_REGION="${AWS_REGION:-ca-central-1}"
 SECRET_NAME="${SECRET_NAME:-ai-gateway/litellm/master-key}"
