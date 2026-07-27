@@ -145,21 +145,6 @@ model_list:
       aws_session_name: "litellm-bedrock"
       tags: ["CEILING_UNCLASSIFIED"]
 
-  - model_name: claude-fable-5
-    litellm_params:
-      model: us.anthropic.claude-fable-5
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
-      tags: ["CEILING_UNCLASSIFIED"]
-
-  - model_name: claude-fable-5-global
-    litellm_params:
-      model: global.anthropic.claude-fable-5
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
-      tags: ["CEILING_UNCLASSIFIED"]
 
   # ── Amazon Nova ──────────────────────────────────────────────────────────
 
