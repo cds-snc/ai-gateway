@@ -16,6 +16,8 @@ env:
   TF_VAR_litellm_db_password: ${{ secrets.LITELLM_DB_PASSWORD }}
   TF_VAR_litellm_master_key: ${{ secrets.LITELLM_MASTER_KEY }}
   TF_VAR_litellm_redis_auth_token: ${{ secrets.LITELLM_REDIS_AUTH_TOKEN }}
+  TF_VAR_azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+  TF_VAR_azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
 permissions: {}
 
