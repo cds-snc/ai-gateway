@@ -1,3 +1,9 @@
+credential_list:
+  - credential_name: azure_openai
+    credential_values:
+      api_base: os.environ/AZURE_API_BASE
+      api_version: "2025-04-01-preview"
+
 model_list:
   # ── Anthropic Claude (inference profiles) ────────────────────────────────
 
@@ -94,12 +100,75 @@ model_list:
   # creating azurerm_cognitive_deployment resources was explicitly deferred).
   # Convert additional azure/* models only after this one is verified
   # end-to-end (health check + real completion) per the rollout plan.
-  # - model_name: azure-canary
-  #   litellm_params:
-  #     model: azure/REPLACE_WITH_AZURE_DEPLOYMENT_NAME
-  #     api_base: os.environ/AZURE_API_BASE
-  #     api_version: "2024-10-21"
-  #     tags: ["CEILING_UNCLASSIFIED"]
+  # GPT-5.5 — the safe frontier pick. Released 2026-04-23, GA on Foundry.
+  - model_name: gpt-5.5
+    litellm_params:
+      model: azure/gpt-5.5
+      litellm_credential_name: azure_openai
+      tags: ["CEILING_UNCLASSIFIED"]
+    model_info:
+      base_model: azure/gpt-5.5
+      mode: chat
+ 
+  # GPT-5.4 — GA on Foundry since March 2026.
+  - model_name: gpt-5.4
+    litellm_params:
+      model: azure/gpt-5.4
+      litellm_credential_name: azure_openai
+      tags: ["CEILING_UNCLASSIFIED"]
+    model_info:
+      base_model: azure/gpt-5.4
+      mode: chat
+
+  - model_name: gpt-5.4-mini
+    litellm_params:
+      model: azure/gpt-5.4-mini
+      litellm_credential_name: azure_openai
+      tags: ["CEILING_UNCLASSIFIED"]
+    model_info:
+      base_model: azure/gpt-5.4-mini
+      mode: chat
+ 
+  - model_name: gpt-5.4-nano
+    litellm_params:
+      model: azure/gpt-5.4-nano
+      litellm_credential_name: azure_openai
+      tags: ["CEILING_UNCLASSIFIED"]
+    model_info:
+      base_model: azure/gpt-5.4-nano
+      mode: chat
+
+  # ---- Coding ------------------------------------------------------------
+ 
+  - model_name: gpt-5.3-codex
+    litellm_params:
+      model: azure/gpt-5.3-codex
+      litellm_credential_name: azure_openai
+      tags: ["CEILING_UNCLASSIFIED"]
+    model_info:
+      base_model: azure/gpt-5.3-codex
+      mode: chat
+ 
+  # ---- Embeddings --------------------------------------------------------
+  # Stable, no retirement pressure. Safe to build on.
+ 
+  - model_name: text-embedding-3-large
+    litellm_params:
+      model: azure/text-embedding-3-large
+      litellm_credential_name: azure_openai
+      tags: ["CEILING_UNCLASSIFIED"]
+    model_info:
+      base_model: azure/text-embedding-3-large
+      mode: embedding
+ 
+  - model_name: text-embedding-3-small
+    litellm_params:
+      model: azure/text-embedding-3-small
+      litellm_credential_name: azure_openai
+      tags: ["CEILING_UNCLASSIFIED"]
+    model_info:
+      base_model: azure/text-embedding-3-small
+      mode: embedding
 
 
 router_settings:
