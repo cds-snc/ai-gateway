@@ -64,16 +64,28 @@ In this stack, those secrets are stored in Secrets Manager under:
 - `${name_prefix}/litellm/redis-auth-token`
 - `${name_prefix}/litellm/master-key`
 
-## Azure OpenAI Key Provisioning (AWS -> Azure Workload Identity Federation)
+## Azure OpenAI Access (AWS -> Azure Workload Identity Federation)
 
-To let the LiteLLM ECS task provision and rotate Azure OpenAI (Cognitive
-Services) API keys, this stack federates the existing AWS IAM task role
-(`BedrockConsumer-litellm`, `aws_iam_role.litellm_task`) into an Azure
-user-assigned managed identity using [AWS IAM Outbound Identity
+This stack federates the existing AWS IAM task role (`BedrockConsumer-litellm`,
+`aws_iam_role.litellm_task`) into **two** Azure user-assigned managed
+identities using [AWS IAM Outbound Identity
 Federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_outbound_getting_started.html)
 and a Microsoft Entra ID [federated identity
-credential](https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust-user-assigned-managed-identity).
-No Azure client secret is stored anywhere.
+credential](https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust-user-assigned-managed-identity)
+per identity. No Azure client secret or Azure OpenAI API key is stored
+anywhere:
+
+- `azurerm_user_assigned_identity.litellm_openai_provisioner` — control
+  plane. Authorized (via a custom role) to provision/rotate Azure OpenAI
+  (Cognitive Services) accounts and keys.
+- `azurerm_user_assigned_identity.litellm_openai_inference` — data plane.
+  This is what the LiteLLM proxy itself authenticates as when calling Azure
+  OpenAI, via a short-lived Entra ID access token. Authorized only with the
+  built-in `Cognitive Services OpenAI User` role, scoped to the account.
+
+Keeping these separate limits the blast radius of either identity being
+compromised: the data-plane identity can invoke models but not read or
+rotate keys, and vice versa.
 
 Relevant files: `terragrunt/ai_gateway/azure_variables.tf`,
 `azure_provider.tf`, `azure_openai_role.tf`, and the
@@ -88,8 +100,8 @@ Federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_
 for this account and exposes its account-specific issuer URL as
 `aws_iam_outbound_web_identity_federation.this.issuer_identifier` (also
 available as the `aws_outbound_web_identity_federation_issuer_url` output).
-This is used directly as the `issuer` on the Azure federated identity
-credential — no manual `aws iam enable-outbound-web-identity-federation`
+This is used directly as the `issuer` on both Azure federated identity
+credentials — no manual `aws iam enable-outbound-web-identity-federation`
 step is required. Note that outbound identity federation can only be
 managed by one Terraform resource per account.
 
@@ -103,28 +115,32 @@ account-specific):
 - `azure_subscription_id`
 
 The applying identity/service principal needs Azure `Contributor` (or
-`Owner`) on the target subscription/resource group to create the managed
-identity, federated credential, custom role definition, and role
-assignment.
+`Owner`) on the target subscription/resource group to create the Cognitive
+Services account, managed identities, federated credentials, custom role
+definition, and role assignments.
 
 ### How the ECS task uses this
 
-At runtime, the task:
+**Control plane (key provisioning):** the task calls AWS STS
+`GetWebIdentityToken` (permitted by
+`aws_iam_role_policy.litellm_task_azure_federation`) requesting audience
+`api://AzureADTokenExchange`, exchanges it for an Entra ID access token as
+`litellm_openai_provisioner` (via `AZURE_PROVISIONER_CLIENT_ID` /
+`AZURE_TENANT_ID`), then calls the Azure Resource Manager API to
+provision/rotate Azure OpenAI accounts within `azure_resource_group_name`.
 
-1. Calls AWS STS `GetWebIdentityToken` (permitted by
-   `aws_iam_role_policy.litellm_task_azure_federation`) requesting audience
-   `api://AzureADTokenExchange`, receiving a short-lived JWT with
-   `sub = arn:aws:iam::<account>:role/BedrockConsumer-litellm`.
-2. Exchanges that JWT for a Microsoft Entra ID access token via the OAuth2
-   client-credentials flow, using `AZURE_CLIENT_ID` / `AZURE_TENANT_ID`
-   (injected as container environment variables, see `litellm_ecs.tf`) and
-   `client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer`.
-3. Uses that access token to call the Azure Resource Manager API (scope
-   `https://management.azure.com/.default`) and read/regenerate keys for
-   Azure OpenAI accounts in `azure_resource_group_name`, then (recommended)
-   writes the resulting key into AWS Secrets Manager for LiteLLM to consume
-   as `AZURE_API_KEY`, matching LiteLLM's [Azure
-   provider](https://docs.litellm.ai/docs/providers/azure/) configuration.
+**Data plane (model calls):** a sidecar container in the same task
+(`azure-token-refresher`, see `litellm_ecs.tf`) loops calling
+`sts:GetWebIdentityToken` and writes the resulting JWT to a shared ephemeral
+volume, refreshing at roughly half the token's lifetime. The LiteLLM
+container reads `AZURE_CLIENT_ID` (the `litellm_openai_inference` identity's
+client ID), `AZURE_TENANT_ID`, and `AZURE_FEDERATED_TOKEN_FILE` (the shared
+volume path) — the same environment-variable convention AKS workload
+identity uses — and its bundled `azure-identity` SDK exchanges that file's
+JWT for a short-lived Entra ID access token automatically
+(`litellm_settings.enable_azure_ad_token_refresh: true` in
+`configuration_files/litellm_config.yaml`). No `AZURE_API_KEY` is ever set on
+the LiteLLM container.
 
 ## Deploy
 

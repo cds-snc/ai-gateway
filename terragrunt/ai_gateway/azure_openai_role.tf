@@ -1,22 +1,31 @@
 # -----------------------------------------------------------------------------
 # Azure side of AWS -> Azure workload identity federation.
 #
-# Goal: let the LiteLLM ECS task (using its existing AWS IAM role,
-# aws_iam_role.litellm_task / "BedrockConsumer-litellm") assume an identity in
-# Azure so it can provision and rotate Azure OpenAI (Cognitive Services) API
-# keys, without ever storing a long-lived Azure client secret.
+# Two separate identities are federated from the same AWS IAM role
+# (aws_iam_role.litellm_task / "BedrockConsumer-litellm"), deliberately kept
+# separate so a compromise of one has a smaller blast radius than the other:
 #
-# Flow:
+#   - azurerm_user_assigned_identity.litellm_openai_provisioner: control
+#     plane. Used only to provision/rotate Azure OpenAI (Cognitive Services)
+#     accounts and keys, authorized via the custom role below.
+#   - azurerm_user_assigned_identity.litellm_openai_inference: data plane.
+#     Used by the LiteLLM proxy itself (via a token-refresh sidecar, see
+#     litellm_ecs.tf) to call the Azure OpenAI data plane directly with a
+#     short-lived Entra ID access token instead of a long-lived API key.
+#     Authorized only with the built-in "Cognitive Services OpenAI User"
+#     role, scoped to the account.
+#
+# Flow (same for both identities, different audience/principal):
 #   1. The ECS task calls AWS STS GetWebIdentityToken (see
 #      aws_iam_role_policy.litellm_task_azure_federation in litellm_iam.tf)
 #      to get a short-lived JWT signed by this AWS account, with
 #      aud = var.azure_federation_audience and sub = the litellm_task role ARN.
-#   2. The task exchanges that JWT for a Microsoft Entra ID access token via
-#      the federated identity credential below (client_credentials grant,
-#      client_assertion_type = urn:ietf:params:oauth:client-assertion-type:jwt-bearer).
-#   3. That access token authenticates as the user-assigned managed identity,
-#      which is authorized (via the custom role below) to read/regenerate
-#      Azure OpenAI keys within azurerm_resource_group.ai_gateway_openai.
+#   2. The task (or, for inference, the sidecar) exchanges that JWT for a
+#      Microsoft Entra ID access token via the matching federated identity
+#      credential below (client_credentials grant, client_assertion_type =
+#      urn:ietf:params:oauth:client-assertion-type:jwt-bearer).
+#   3. That access token authenticates as the corresponding user-assigned
+#      managed identity.
 #
 # Note: this Terraform manages account-level enablement of AWS IAM Outbound
 # Web Identity Federation directly via aws_iam_outbound_web_identity_federation
@@ -49,7 +58,37 @@ data "azurerm_resource_group" "ai_gateway_openai" {
 }
 
 locals {
-  azure_openai_resource_group_id = var.azure_create_resource_group ? azurerm_resource_group.ai_gateway_openai[0].id : data.azurerm_resource_group.ai_gateway_openai[0].id
+  azure_openai_resource_group_id   = var.azure_create_resource_group ? azurerm_resource_group.ai_gateway_openai[0].id : data.azurerm_resource_group.ai_gateway_openai[0].id
+  azure_openai_resource_group_name = var.azure_create_resource_group ? azurerm_resource_group.ai_gateway_openai[0].name : data.azurerm_resource_group.ai_gateway_openai[0].name
+  azure_openai_custom_subdomain_name = (
+    var.azure_openai_custom_subdomain_name != "" ? var.azure_openai_custom_subdomain_name : var.azure_openai_account_name
+  )
+}
+
+# The Azure OpenAI (Cognitive Services) account itself. custom_subdomain_name
+# is required: Entra ID token auth only works against
+# https://<name>.openai.azure.com, never the shared regional endpoint.
+#
+# local_auth_enabled = false: key-based auth is disabled outright. This repo
+# never actually stored/used an AZURE_API_KEY (no Secrets Manager secret, no
+# ECS secret reference, no rotation automation ever existed here -- see
+# README/PR history), so there is no rollback path being removed and nothing
+# else in this account depends on subscription keys. All Azure OpenAI access
+# goes through the workload-identity-federated managed identities below.
+resource "azurerm_cognitive_account" "openai" {
+  name                  = var.azure_openai_account_name
+  resource_group_name   = local.azure_openai_resource_group_name
+  location              = var.azure_location
+  kind                  = "OpenAI"
+  sku_name              = var.azure_openai_sku_name
+  local_auth_enabled    = false
+  custom_subdomain_name = local.azure_openai_custom_subdomain_name
+
+  tags = {
+    purpose             = "ai-gateway"
+    data-classification = var.data_classification
+    managed-by          = "terraform"
+  }
 }
 
 # User-assigned managed identity that acts as the "role" the ECS task assumes
@@ -58,7 +97,7 @@ locals {
 # resource group.
 resource "azurerm_user_assigned_identity" "litellm_openai_provisioner" {
   name                = var.azure_managed_identity_name
-  resource_group_name = var.azure_create_resource_group ? azurerm_resource_group.ai_gateway_openai[0].name : data.azurerm_resource_group.ai_gateway_openai[0].name
+  resource_group_name = local.azure_openai_resource_group_name
   location            = var.azure_location
 
   tags = {
@@ -72,7 +111,7 @@ resource "azurerm_user_assigned_identity" "litellm_openai_provisioner" {
 # this managed identity.
 resource "azurerm_federated_identity_credential" "litellm_task_aws" {
   name                = "${var.name_prefix}-litellm-task-aws-federation"
-  resource_group_name = var.azure_create_resource_group ? azurerm_resource_group.ai_gateway_openai[0].name : data.azurerm_resource_group.ai_gateway_openai[0].name
+  resource_group_name = local.azure_openai_resource_group_name
   parent_id           = azurerm_user_assigned_identity.litellm_openai_provisioner.id
 
   issuer  = aws_iam_outbound_web_identity_federation.this.issuer_identifier
@@ -118,3 +157,42 @@ resource "azurerm_role_assignment" "litellm_openai_provisioner" {
   role_definition_id = azurerm_role_definition.openai_key_provisioner.role_definition_resource_id
   principal_id       = azurerm_user_assigned_identity.litellm_openai_provisioner.principal_id
 }
+
+# --- Inference-only identity (data plane) ------------------------------------
+# Separate from the provisioner identity above: this is what the LiteLLM
+# proxy container actually authenticates as when calling Azure OpenAI. It can
+# only invoke models on the one account below -- it cannot read/rotate keys,
+# create/delete accounts, or touch anything else in the resource group.
+resource "azurerm_user_assigned_identity" "litellm_openai_inference" {
+  name                = var.azure_inference_identity_name
+  resource_group_name = local.azure_openai_resource_group_name
+  location            = var.azure_location
+
+  tags = {
+    purpose    = "ai-gateway"
+    managed-by = "terraform"
+  }
+}
+
+resource "azurerm_federated_identity_credential" "litellm_inference_aws" {
+  name                = "${var.name_prefix}-litellm-inference-aws-federation"
+  resource_group_name = local.azure_openai_resource_group_name
+  parent_id           = azurerm_user_assigned_identity.litellm_openai_inference.id
+
+  issuer  = aws_iam_outbound_web_identity_federation.this.issuer_identifier
+  subject = aws_iam_role.litellm_task.arn
+  audience = [
+    var.azure_federation_audience
+  ]
+}
+
+# Built-in data-plane role, scoped to the account (not the resource group):
+# inference only needs to call the account's OpenAI API, not
+# Microsoft.Resources/subscriptions/resourceGroups/read like the provisioner's
+# custom role. Deliberately does not extend openai_key_provisioner.
+resource "azurerm_role_assignment" "litellm_openai_inference" {
+  scope                = azurerm_cognitive_account.openai.id
+  role_definition_name = "Cognitive Services OpenAI User"
+  principal_id         = azurerm_user_assigned_identity.litellm_openai_inference.principal_id
+}
+

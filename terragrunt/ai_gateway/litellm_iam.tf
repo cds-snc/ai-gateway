@@ -150,4 +150,17 @@ data "aws_iam_policy_document" "litellm_exec_extra" {
     ]
     resources = [aws_kms_key.invocation_logs.arn]
   }
+
+  # The azure-token-refresher sidecar (litellm_ecs.tf) logs to its own
+  # CloudWatch log group, not the one the ECS module creates for the litellm
+  # container, so the task exec role needs an explicit grant for it.
+  statement {
+    sid    = "AllowAzureTokenSidecarLogging"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["${aws_cloudwatch_log_group.azure_token_sidecar.arn}:*"]
+  }
 }
