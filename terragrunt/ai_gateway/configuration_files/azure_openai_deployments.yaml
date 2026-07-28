@@ -31,7 +31,6 @@
 #   gpt-5.6-terra/luna/sol 2026-07-09  GA  retires 2027-07-09
 #   gpt-5.2                2025-12-11  GA  retires 2026-12-12
 #   gpt-5.1                2025-11-13  GA  retires 2027-05-15
-#   gpt-5 / gpt-5-mini     2025-08-07  GA  retires 2027-02-06
 #   gpt-5.3-codex          2026-02-24  GA  retires 2027-02-25
 #   gpt-5.2-codex          2026-01-14  GA  retires 2027-01-14
 #   gpt-5.1-codex-max      2025-12-04  GA  retires 2026-12-05
@@ -41,7 +40,16 @@
 #   text-embedding-3-small 1           GA  retires 2028-02-09
 #
 # model_format, sku_name and capacity are optional per entry and default to
-# "OpenAI", "Standard" and 10 respectively (see azure_openai_deployments.tf).
+# "OpenAI", "GlobalStandard" and 10 respectively (see azure_openai_deployments.tf).
+# GlobalStandard is required here: `az cognitiveservices account list-models`
+# output for this account (canadacentral) shows NO model offers the regional
+# "Standard" SKU at all -- only GlobalStandard (non-provisioned) and
+# ProvisionedManaged/GlobalProvisionedManaged/DeveloperTier (reserved
+# throughput, not used here). gpt-5 and gpt-5-mini were removed from this
+# list entirely: in this account they only expose GlobalProvisionedManaged
+# (no GlobalStandard/Standard option), so they can't be deployed as a
+# pay-as-you-go (non-provisioned) SKU. Only override sku_name per-entry if
+# you've confirmed via that same command that a different SKU is supported.
 # -----------------------------------------------------------------------------
 
 deployments:
@@ -91,15 +99,11 @@ deployments:
     model_name: gpt-5.1
     model_version: "2025-11-13"
 
-  - name: gpt-5
-    category: "Chat / reasoning"
-    model_name: gpt-5
-    model_version: "2025-08-07"
-
-  - name: gpt-5-mini
-    category: "Chat / reasoning"
-    model_name: gpt-5-mini
-    model_version: "2025-08-07"
+  # gpt-5 / gpt-5-mini intentionally omitted: this account only offers them
+  # under the GlobalProvisionedManaged SKU (reserved/provisioned throughput),
+  # not GlobalStandard or Standard, so they can't be deployed pay-as-you-go.
+  # Re-add them (with sku_name: GlobalProvisionedManaged and a capacity that
+  # matches your reserved PTUs) if you provision capacity for them.
 
   # ── Coding ────────────────────────────────────────────────────────────
   - name: gpt-5.3-codex

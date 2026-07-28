@@ -25,14 +25,17 @@ locals {
   )["deployments"]
 
   # Fill in defaults for the optional per-deployment fields (model_format,
-  # sku_name, capacity), and compute is_new_category (used by the
+  # sku_name -- "GlobalStandard", since the regional "Standard" SKU is
+  # rejected for every model in this account/region (confirmed via `az
+  # cognitiveservices account list-models`) -- capacity), and compute
+  # is_new_category (used by the
   # litellm_config.yaml.tftpl template to emit a comment header whenever the
   # category changes) so the rendered YAML stays grouped/readable the same
   # way the previous hand-maintained file was.
   azure_openai_deployments_ordered = [
     for idx, d in local.azure_openai_deployments_list : merge(d, {
       model_format    = try(d.model_format, "OpenAI")
-      sku_name        = try(d.sku_name, "Standard")
+      sku_name        = try(d.sku_name, "GlobalStandard")
       capacity        = try(d.capacity, 10)
       is_new_category = idx == 0 ? true : d.category != local.azure_openai_deployments_list[idx - 1].category
     })
