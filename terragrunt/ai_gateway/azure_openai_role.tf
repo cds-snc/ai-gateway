@@ -7,7 +7,8 @@
 #
 #   - azurerm_user_assigned_identity.litellm_openai_provisioner: control
 #     plane. Used only to provision/rotate Azure OpenAI (Cognitive Services)
-#     accounts and keys, authorized via the custom role below.
+#     accounts and keys, authorized via the built-in "Cognitive Services
+#     Contributor" role assignment below.
 #   - azurerm_user_assigned_identity.litellm_openai_inference: data plane.
 #     Used by the LiteLLM proxy itself (via a token-refresh sidecar, see
 #     litellm_ecs.tf) to call the Azure OpenAI data plane directly with a
@@ -121,40 +122,16 @@ resource "azurerm_federated_identity_credential" "litellm_task_aws" {
   ]
 }
 
-# Minimal custom role: only what's needed to create/read/delete Azure OpenAI
-# (Cognitive Services) accounts and deployments and to read/rotate their
-# subscription keys. Deliberately narrower than the built-in "Cognitive
-# Services Contributor" role's broader Cognitive Services surface area.
-resource "azurerm_role_definition" "openai_key_provisioner" {
-  name        = "${var.name_prefix}-openai-key-provisioner"
-  scope       = local.azure_openai_resource_group_id
-  description = "Provision, configure, and rotate Azure OpenAI (Cognitive Services) accounts and keys for the AI gateway."
-
-  permissions {
-    actions = [
-      "Microsoft.CognitiveServices/accounts/read",
-      "Microsoft.CognitiveServices/accounts/write",
-      "Microsoft.CognitiveServices/accounts/delete",
-      "Microsoft.CognitiveServices/accounts/listKeys/action",
-      "Microsoft.CognitiveServices/accounts/regenerateKey/action",
-      "Microsoft.CognitiveServices/accounts/deployments/read",
-      "Microsoft.CognitiveServices/accounts/deployments/write",
-      "Microsoft.CognitiveServices/accounts/deployments/delete",
-      "Microsoft.CognitiveServices/locations/usages/read",
-      "Microsoft.CognitiveServices/locations/modelCapacities/read",
-      "Microsoft.Resources/subscriptions/resourceGroups/read"
-    ]
-    not_actions = []
-  }
-
-  assignable_scopes = [
-    local.azure_openai_resource_group_id
-  ]
-}
-
+# Built-in "Cognitive Services Contributor" role, assigned at the resource
+# group scope. A superset of the actions previously granted by a hand-scoped
+# custom role (Microsoft.CognitiveServices/*), used instead because creating
+# a custom azurerm_role_definition requires
+# Microsoft.Authorization/roleDefinitions/write, which the CI service
+# principal's Contributor + Role Based Access Control Administrator roles do
+# not grant. Assigning a built-in role only needs roleAssignments/write.
 resource "azurerm_role_assignment" "litellm_openai_provisioner" {
   scope              = local.azure_openai_resource_group_id
-  role_definition_id = azurerm_role_definition.openai_key_provisioner.role_definition_resource_id
+  role_definition_id = "/subscriptions/${var.azure_subscription_id}/providers/Microsoft.Authorization/roleDefinitions/25fbc0a9-bd7c-42a3-aa1a-3b75d497ee68"
   principal_id       = azurerm_user_assigned_identity.litellm_openai_provisioner.principal_id
 }
 
@@ -187,9 +164,9 @@ resource "azurerm_federated_identity_credential" "litellm_inference_aws" {
 }
 
 # Built-in data-plane role, scoped to the account (not the resource group):
-# inference only needs to call the account's OpenAI API, not
-# Microsoft.Resources/subscriptions/resourceGroups/read like the provisioner's
-# custom role. Deliberately does not extend openai_key_provisioner.
+# inference only needs to call the account's OpenAI API, not the broader
+# Cognitive Services Contributor permissions granted to the provisioner
+# identity above. Deliberately does not extend litellm_openai_provisioner.
 resource "azurerm_role_assignment" "litellm_openai_inference" {
   scope                = azurerm_cognitive_account.openai.id
   role_definition_name = "Cognitive Services OpenAI User"
