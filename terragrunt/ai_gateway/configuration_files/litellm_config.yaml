@@ -3,6 +3,15 @@ credential_list:
     credential_values:
       api_base: os.environ/AZURE_API_BASE
       api_version: "2025-04-01-preview"
+    credential_info:
+      description: "Azure OpenAI Service (Entra ID workload identity federation)"
+  - credential_name: aws_bedrock
+    credential_values:
+      aws_region_name: ca-central-1
+      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
+      aws_session_name: "litellm-bedrock"
+    credential_info:
+      description: "AWS Bedrock Service (IAM role)"
 
 model_list:
   # ── Anthropic Claude (inference profiles) ────────────────────────────────
@@ -10,41 +19,32 @@ model_list:
   - model_name: claude-haiku-4-5
     litellm_params:
       model: us.anthropic.claude-haiku-4-5-20251001-v1:0
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: claude-sonnet-4-5
     litellm_params:
       model: us.anthropic.claude-sonnet-4-5-20250929-v1:0
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED"]
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: claude-sonnet-4-6
     litellm_params:
       model: us.anthropic.claude-sonnet-4-6
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: claude-opus-4-5
     litellm_params:
       model: us.anthropic.claude-opus-4-5-20251101-v1:0
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: claude-opus-4-6
     litellm_params:
       model: us.anthropic.claude-opus-4-6-v1
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
   # ── Amazon Nova ──────────────────────────────────────────────────────────
@@ -52,9 +52,7 @@ model_list:
   - model_name: amazon-nova-2-lite
     litellm_params:
       model: us.amazon.nova-2-lite-v1:0
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
   # ── Cohere ───────────────────────────────────────────────────────────────
@@ -62,33 +60,25 @@ model_list:
   - model_name: cohere-embed-english
     litellm_params:
       model: cohere.embed-english-v3
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: cohere-embed-multilingual
     litellm_params:
       model: cohere.embed-multilingual-v3
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: cohere-embed-v4
     litellm_params:
-      model: global.cohere.embed-v4:0
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      model: bedrock/global.cohere.embed-v4:0
+      litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: cohere-rerank
     litellm_params:
       model: cohere.rerank-v3-5:0
-      aws_region_name: ca-central-1
-      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
-      aws_session_name: "litellm-bedrock"
+      litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
   # ── Azure OpenAI (workload identity, canary) ────────────────────────────
@@ -106,9 +96,6 @@ model_list:
       model: azure/gpt-5.5
       litellm_credential_name: azure_openai
       tags: ["CEILING_UNCLASSIFIED"]
-    model_info:
-      base_model: azure/gpt-5.5
-      mode: chat
  
   # GPT-5.4 — GA on Foundry since March 2026.
   - model_name: gpt-5.4
@@ -116,27 +103,18 @@ model_list:
       model: azure/gpt-5.4
       litellm_credential_name: azure_openai
       tags: ["CEILING_UNCLASSIFIED"]
-    model_info:
-      base_model: azure/gpt-5.4
-      mode: chat
 
   - model_name: gpt-5.4-mini
     litellm_params:
       model: azure/gpt-5.4-mini
       litellm_credential_name: azure_openai
       tags: ["CEILING_UNCLASSIFIED"]
-    model_info:
-      base_model: azure/gpt-5.4-mini
-      mode: chat
  
   - model_name: gpt-5.4-nano
     litellm_params:
       model: azure/gpt-5.4-nano
       litellm_credential_name: azure_openai
       tags: ["CEILING_UNCLASSIFIED"]
-    model_info:
-      base_model: azure/gpt-5.4-nano
-      mode: chat
 
   # ---- Coding ------------------------------------------------------------
  
@@ -145,9 +123,6 @@ model_list:
       model: azure/gpt-5.3-codex
       litellm_credential_name: azure_openai
       tags: ["CEILING_UNCLASSIFIED"]
-    model_info:
-      base_model: azure/gpt-5.3-codex
-      mode: chat
  
   # ---- Embeddings --------------------------------------------------------
   # Stable, no retirement pressure. Safe to build on.
@@ -157,18 +132,12 @@ model_list:
       model: azure/text-embedding-3-large
       litellm_credential_name: azure_openai
       tags: ["CEILING_UNCLASSIFIED"]
-    model_info:
-      base_model: azure/text-embedding-3-large
-      mode: embedding
  
   - model_name: text-embedding-3-small
     litellm_params:
       model: azure/text-embedding-3-small
       litellm_credential_name: azure_openai
       tags: ["CEILING_UNCLASSIFIED"]
-    model_info:
-      base_model: azure/text-embedding-3-small
-      mode: embedding
 
 
 router_settings:
