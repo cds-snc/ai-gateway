@@ -27,7 +27,6 @@ model_list:
       model: us.anthropic.claude-sonnet-4-5-20250929-v1:0
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
-      tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: claude-sonnet-4-6
     litellm_params:
@@ -85,61 +84,26 @@ model_list:
   # Auth is via Entra ID workload identity federation (AZURE_CLIENT_ID /
   # AZURE_TENANT_ID / AZURE_FEDERATED_TOKEN_FILE, see litellm_ecs.tf and
   # litellm_settings.enable_azure_ad_token_refresh below) -- no api_key.
-  # TODO: model/deployment name is a placeholder. Set it to a real Azure
-  # OpenAI deployment name once one exists (out of scope for this change;
-  # creating azurerm_cognitive_deployment resources was explicitly deferred).
-  # Convert additional azure/* models only after this one is verified
-  # end-to-end (health check + real completion) per the rollout plan.
-  # GPT-5.5 — the safe frontier pick. Released 2026-04-23, GA on Foundry.
-  - model_name: gpt-5.5
-    litellm_params:
-      model: azure/gpt-5.5
-      litellm_credential_name: azure_openai
-      tags: ["CEILING_UNCLASSIFIED"]
- 
-  # GPT-5.4 — GA on Foundry since March 2026.
-  - model_name: gpt-5.4
-    litellm_params:
-      model: azure/gpt-5.4
-      litellm_credential_name: azure_openai
-      tags: ["CEILING_UNCLASSIFIED"]
+  # GENERATED from configuration_files/azure_openai_deployments.yaml via
+  # templatefile() in litellm_config.tf -- do NOT hand-edit the entries
+  # below, edit that YAML file instead (add/remove/reorder deployments
+  # there) and re-apply.
+  # Each entry is backed by an azurerm_cognitive_deployment named
+  # identically to the azure/<name> deployment name (see
+  # azure_openai_deployments.tf). That deployment's model_version must be
+  # set to a real value before `terragrunt apply` -- until then these will
+  # 404 with "The API deployment for this resource does not exist".
+%{ for d in azure_deployments ~}
+%{ if d.is_new_category ~}
 
-  - model_name: gpt-5.4-mini
+  # ---- ${d.category} ----
+%{ endif }
+  - model_name: ${d.name}
     litellm_params:
-      model: azure/gpt-5.4-mini
+      model: azure/${d.name}
       litellm_credential_name: azure_openai
       tags: ["CEILING_UNCLASSIFIED"]
- 
-  - model_name: gpt-5.4-nano
-    litellm_params:
-      model: azure/gpt-5.4-nano
-      litellm_credential_name: azure_openai
-      tags: ["CEILING_UNCLASSIFIED"]
-
-  # ---- Coding ------------------------------------------------------------
- 
-  - model_name: gpt-5.3-codex
-    litellm_params:
-      model: azure/gpt-5.3-codex
-      litellm_credential_name: azure_openai
-      tags: ["CEILING_UNCLASSIFIED"]
- 
-  # ---- Embeddings --------------------------------------------------------
-  # Stable, no retirement pressure. Safe to build on.
- 
-  - model_name: text-embedding-3-large
-    litellm_params:
-      model: azure/text-embedding-3-large
-      litellm_credential_name: azure_openai
-      tags: ["CEILING_UNCLASSIFIED"]
- 
-  - model_name: text-embedding-3-small
-    litellm_params:
-      model: azure/text-embedding-3-small
-      litellm_credential_name: azure_openai
-      tags: ["CEILING_UNCLASSIFIED"]
-
-
+%{ endfor }
 router_settings:
   redis_host: os.environ/REDIS_HOST
   redis_port: os.environ/REDIS_PORT
