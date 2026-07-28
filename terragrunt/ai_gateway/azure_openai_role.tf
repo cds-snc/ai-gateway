@@ -111,9 +111,8 @@ resource "azurerm_user_assigned_identity" "litellm_openai_provisioner" {
 # AWS-issued JWT (sub = role ARN) for a Microsoft Entra ID access token as
 # this managed identity.
 resource "azurerm_federated_identity_credential" "litellm_task_aws" {
-  name                = "${var.name_prefix}-litellm-task-aws-federation"
-  resource_group_name = local.azure_openai_resource_group_name
-  parent_id           = azurerm_user_assigned_identity.litellm_openai_provisioner.id
+  name                      = "${var.name_prefix}-litellm-task-aws-federation"
+  user_assigned_identity_id = azurerm_user_assigned_identity.litellm_openai_provisioner.id
 
   issuer  = aws_iam_outbound_web_identity_federation.this.issuer_identifier
   subject = aws_iam_role.litellm_task.arn
@@ -152,9 +151,8 @@ resource "azurerm_user_assigned_identity" "litellm_openai_inference" {
 }
 
 resource "azurerm_federated_identity_credential" "litellm_inference_aws" {
-  name                = "${var.name_prefix}-litellm-inference-aws-federation"
-  resource_group_name = local.azure_openai_resource_group_name
-  parent_id           = azurerm_user_assigned_identity.litellm_openai_inference.id
+  name                      = "${var.name_prefix}-litellm-inference-aws-federation"
+  user_assigned_identity_id = azurerm_user_assigned_identity.litellm_openai_inference.id
 
   issuer  = aws_iam_outbound_web_identity_federation.this.issuer_identifier
   subject = aws_iam_role.litellm_task.arn
