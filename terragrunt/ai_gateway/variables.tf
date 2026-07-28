@@ -186,9 +186,9 @@ variable "litellm_config_s3_key" {
 }
 
 variable "litellm_config_yaml" {
-  description = "Path to the LiteLLM proxy config YAML uploaded to S3, relative to this module."
+  description = "Path to the LiteLLM proxy config template, relative to this module. Rendered via templatefile() (see litellm_config.tf) before being uploaded to S3."
   type        = string
-  default     = "configuration_files/litellm_config.yaml"
+  default     = "configuration_files/litellm_config.yaml.tftpl"
 }
 
 variable "litellm_master_key" {

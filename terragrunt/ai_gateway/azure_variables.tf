@@ -79,3 +79,9 @@ variable "azure_federated_token_refresh_duration_seconds" {
   type        = number
   default     = 300
 }
+
+variable "azure_openai_deployments_config" {
+  description = "Path to the YAML file describing Azure OpenAI (Cognitive Services) deployments to create, relative to this module. See azure_openai_deployments.tf and configuration_files/azure_openai_deployments.yaml."
+  type        = string
+  default     = "configuration_files/azure_openai_deployments.yaml"
+}

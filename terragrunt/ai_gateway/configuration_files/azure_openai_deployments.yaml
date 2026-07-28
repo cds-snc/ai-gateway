@@ -1,0 +1,143 @@
+# -----------------------------------------------------------------------------
+# Azure OpenAI (Cognitive Services) model deployments to create via
+# azurerm_cognitive_deployment (see ../azure_openai_deployments.tf).
+#
+# This is the single source of truth for azure/* models: the Azure OpenAI
+# section of configuration_files/litellm_config.yaml.tftpl is generated from
+# this list by templatefile() in litellm_config.tf. Add/remove/reorder a
+# model here and it flows through to both the Terraform deployment and the
+# LiteLLM proxy config -- do not hand-edit the azure/* entries in
+# litellm_config.yaml.tftpl.
+#
+# `deployments` is a list, not a map: order is preserved (unlike a YAML/HCL
+# map) so `category` groups stay together and in the same order as below
+# when rendered into litellm_config.yaml.tftpl. `name` is used both as the
+# azurerm_cognitive_deployment name and as the `<name>` in the generated
+# `azure/<name>` litellm_params.model value, so it must be unique.
+#
+# model_version values below were confirmed available in the CDS-AI
+# subscription's ai-gateway-openai-account via:
+#   az cognitiveservices account list-models -n ai-gateway-openai-account \
+#     -g ai-gateway-openai --query "[].{model:name, version:version, \
+#     default:isDefaultVersion, status:lifecycleStatus, \
+#     retires:deprecation.inference}" -o table
+# Re-run that command and update these before the listed "retires" date, or
+# whenever bumping a model, to confirm the version is still available.
+# As of 2026-07-28:
+#   gpt-5.5                2026-04-24  GA  retires 2027-04-24
+#   gpt-5.4                2026-03-05  GA  retires 2027-03-05
+#   gpt-5.4-mini            2026-03-17  GA  retires 2027-03-18
+#   gpt-5.4-nano            2026-03-17  GA  retires 2027-03-18
+#   gpt-5.6-terra/luna/sol 2026-07-09  GA  retires 2027-07-09
+#   gpt-5.2                2025-12-11  GA  retires 2026-12-12
+#   gpt-5.1                2025-11-13  GA  retires 2027-05-15
+#   gpt-5 / gpt-5-mini     2025-08-07  GA  retires 2027-02-06
+#   gpt-5.3-codex          2026-02-24  GA  retires 2027-02-25
+#   gpt-5.2-codex          2026-01-14  GA  retires 2027-01-14
+#   gpt-5.1-codex-max      2025-12-04  GA  retires 2026-12-05
+#   gpt-5.1-codex          2025-11-13  GA  retires 2027-05-15
+#   gpt-5.1-codex-mini     2025-11-13  GA  retires 2027-05-15
+#   text-embedding-3-large 1           GA  retires 2028-02-09
+#   text-embedding-3-small 1           GA  retires 2028-02-09
+#
+# model_format, sku_name and capacity are optional per entry and default to
+# "OpenAI", "Standard" and 10 respectively (see azure_openai_deployments.tf).
+# -----------------------------------------------------------------------------
+
+deployments:
+  # ── Chat / reasoning ──────────────────────────────────────────────────
+  - name: gpt-5.5
+    category: "Chat / reasoning"
+    model_name: gpt-5.5
+    model_version: "2026-04-24"
+
+  - name: gpt-5.4
+    category: "Chat / reasoning"
+    model_name: gpt-5.4
+    model_version: "2026-03-05"
+
+  - name: gpt-5.4-mini
+    category: "Chat / reasoning"
+    model_name: gpt-5.4-mini
+    model_version: "2026-03-17"
+
+  - name: gpt-5.4-nano
+    category: "Chat / reasoning"
+    model_name: gpt-5.4-nano
+    model_version: "2026-03-17"
+
+  - name: gpt-5.6-terra
+    category: "Chat / reasoning"
+    model_name: gpt-5.6-terra
+    model_version: "2026-07-09"
+
+  - name: gpt-5.6-luna
+    category: "Chat / reasoning"
+    model_name: gpt-5.6-luna
+    model_version: "2026-07-09"
+
+  - name: gpt-5.6-sol
+    category: "Chat / reasoning"
+    model_name: gpt-5.6-sol
+    model_version: "2026-07-09"
+
+  - name: gpt-5.2
+    category: "Chat / reasoning"
+    model_name: gpt-5.2
+    model_version: "2025-12-11"
+
+  - name: gpt-5.1
+    category: "Chat / reasoning"
+    model_name: gpt-5.1
+    model_version: "2025-11-13"
+
+  - name: gpt-5
+    category: "Chat / reasoning"
+    model_name: gpt-5
+    model_version: "2025-08-07"
+
+  - name: gpt-5-mini
+    category: "Chat / reasoning"
+    model_name: gpt-5-mini
+    model_version: "2025-08-07"
+
+  # ── Coding ────────────────────────────────────────────────────────────
+  - name: gpt-5.3-codex
+    category: "Coding"
+    model_name: gpt-5.3-codex
+    model_version: "2026-02-24"
+
+  - name: gpt-5.2-codex
+    category: "Coding"
+    model_name: gpt-5.2-codex
+    model_version: "2026-01-14"
+
+  - name: gpt-5.1-codex-max
+    category: "Coding"
+    model_name: gpt-5.1-codex-max
+    model_version: "2025-12-04"
+
+  - name: gpt-5.1-codex
+    category: "Coding"
+    model_name: gpt-5.1-codex
+    model_version: "2025-11-13"
+
+  - name: gpt-5.1-codex-mini
+    category: "Coding"
+    model_name: gpt-5.1-codex-mini
+    model_version: "2025-11-13"
+
+  # ── Embeddings ────────────────────────────────────────────────────────
+  # Stable, no retirement pressure.
+  - name: text-embedding-3-large
+    category: "Embeddings"
+    model_name: text-embedding-3-large
+    model_version: "1"
+
+  - name: text-embedding-3-small
+    category: "Embeddings"
+    model_name: text-embedding-3-small
+    model_version: "1"
+
+
+
