@@ -77,4 +77,15 @@ inputs = {
 	azure_create_resource_group = true
 	azure_managed_identity_name = "ai-gateway-litellm-openai-provisioner"
 	azure_federation_audience   = "api://AzureADTokenExchange"
+
+	# Inference-only identity (data plane) and the Azure OpenAI account itself.
+	azure_inference_identity_name = "ai-gateway-litellm-openai-inference"
+	azure_openai_account_name     = "ai-gateway-openai-account"
+	azure_openai_sku_name         = "S0"
+	# Leave empty to default to azure_openai_account_name.
+	azure_openai_custom_subdomain_name = ""
+
+	# Sidecar that refreshes the Azure federated token file (litellm_ecs.tf).
+	azure_token_sidecar_image                      = "public.ecr.aws/aws-cli/aws-cli:2.36.6"
+	azure_federated_token_refresh_duration_seconds = 300
 }
