@@ -63,4 +63,18 @@ inputs = {
 	litellm_task_cpu       = 1024
 	litellm_task_memory    = 2048
 	litellm_use_redis      = false
+
+	# Azure workload identity federation (AWS litellm_task role -> Azure
+	# managed identity) for provisioning/rotating Azure OpenAI keys.
+	# azure_tenant_id and azure_subscription_id are account-specific and must
+	# be supplied via TF_VAR_* environment variables or a gitignored
+	# staging.auto.tfvars rather than committed here. See README.md. The AWS
+	# outbound web identity federation issuer URL is managed directly by
+	# Terraform (aws_iam_outbound_web_identity_federation) and does not need
+	# to be supplied here.
+	azure_location              = "canadacentral"
+	azure_resource_group_name   = "ai-gateway-openai"
+	azure_create_resource_group = true
+	azure_managed_identity_name = "ai-gateway-litellm-openai-provisioner"
+	azure_federation_audience   = "api://AzureADTokenExchange"
 }

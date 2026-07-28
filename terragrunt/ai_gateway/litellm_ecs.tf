@@ -57,7 +57,15 @@ module "litellm" {
     { name = "LITELLM_CONFIG_BUCKET_TYPE", value = "s3" },
     { name = "LITELLM_CONFIG_BUCKET_NAME", value = module.invocation_logs_bucket.s3_bucket_id },
     { name = "LITELLM_CONFIG_BUCKET_OBJECT_KEY", value = var.litellm_config_s3_key },
-    { name = "LITELLM_LOCAL_MODEL_COST_MAP", value = var.litellm_local_model_cost_map }
+    { name = "LITELLM_LOCAL_MODEL_COST_MAP", value = var.litellm_local_model_cost_map },
+    # Azure workload identity federation: lets the task exchange its AWS
+    # identity for a Microsoft Entra ID token as this managed identity, to
+    # provision/rotate Azure OpenAI keys. See azure_openai_role.tf.
+    { name = "AZURE_TENANT_ID", value = var.azure_tenant_id },
+    { name = "AZURE_CLIENT_ID", value = azurerm_user_assigned_identity.litellm_openai_provisioner.client_id },
+    { name = "AZURE_SUBSCRIPTION_ID", value = var.azure_subscription_id },
+    { name = "AZURE_RESOURCE_GROUP", value = var.azure_resource_group_name },
+    { name = "AZURE_FEDERATION_AUDIENCE", value = var.azure_federation_audience }
   ]
 
   container_secrets = [

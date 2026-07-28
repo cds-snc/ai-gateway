@@ -80,6 +80,40 @@ resource "aws_iam_role_policy" "litellm_task" {
   })
 }
 
+# Allows the LiteLLM ECS task role to request a short-lived JWT (via AWS
+# Outbound Identity Federation) scoped only to the Azure AD token-exchange
+# audience, which is exchanged for a Microsoft Entra ID access token as
+# azurerm_user_assigned_identity.litellm_openai_provisioner (see
+# azure_openai_role.tf). Requires the account-level, one-time
+# `aws iam enable-outbound-web-identity-federation` step described in the
+# README; this policy alone does not enable the feature.
+resource "aws_iam_role_policy" "litellm_task_azure_federation" {
+  name = "BedrockConsumer-litellm-azure-federation-policy"
+  role = aws_iam_role.litellm_task.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowAzureADTokenExchangeWebIdentityToken"
+        Effect = "Allow"
+        Action = [
+          "sts:GetWebIdentityToken"
+        ]
+        Resource = "*"
+        Condition = {
+          "ForAllValues:StringEquals" = {
+            "sts:IdentityTokenAudience" = var.azure_federation_audience
+          }
+          NumericLessThanEquals = {
+            "sts:DurationSeconds" = 300
+          }
+        }
+      }
+    ]
+  })
+}
+
 data "aws_iam_policy_document" "litellm_exec_extra" {
   statement {
     sid    = "AllowReadLiteLLMMasterKey"

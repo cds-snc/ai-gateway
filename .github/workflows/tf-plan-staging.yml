@@ -16,6 +16,8 @@ env:
   TF_VAR_litellm_db_password: ${{ secrets.LITELLM_DB_PASSWORD }}
   TF_VAR_litellm_master_key: ${{ secrets.LITELLM_MASTER_KEY }}
   TF_VAR_litellm_redis_auth_token: ${{ secrets.LITELLM_REDIS_AUTH_TOKEN }}
+  TF_VAR_azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+  TF_VAR_azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
 permissions: {}
 
@@ -58,6 +60,14 @@ jobs:
           role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/ai-gateway-plan
           role-session-name: TFPlan
           aws-region: ${{ env.AWS_REGION }}
+
+      # Log into Azure
+      - name: Azure Login using OIDC
+        uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 # v3.0.0
+        with:
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Plan
         uses: cds-snc/terraform-plan@529b272050a8f718d14c59e62b59c124eead7efc # v5.0.4
