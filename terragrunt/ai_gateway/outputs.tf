@@ -13,11 +13,6 @@ output "azure_openai_resource_group_id" {
   value       = local.azure_openai_resource_group_id
 }
 
-output "azure_openai_role_definition_id" {
-  description = "Resource ID of the custom Azure role granted to the managed identity for provisioning Azure OpenAI keys."
-  value       = azurerm_role_definition.openai_key_provisioner.role_definition_resource_id
-}
-
 output "azure_openai_account_id" {
   description = "Resource ID of the Azure OpenAI (Cognitive Services) account used by the LiteLLM data plane."
   value       = azurerm_cognitive_account.openai.id
