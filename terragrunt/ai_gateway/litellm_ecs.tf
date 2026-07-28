@@ -123,7 +123,8 @@ module "litellm" {
     { name = "AZURE_CLIENT_ID", value = azurerm_user_assigned_identity.litellm_openai_inference.client_id },
     { name = "AZURE_FEDERATED_TOKEN_FILE", value = local.azure_token_file_path },
     { name = "AZURE_API_BASE", value = azurerm_cognitive_account.openai.endpoint },
-    { name = "AZURE_FEDERATION_AUDIENCE", value = var.azure_federation_audience }
+    { name = "AZURE_FEDERATION_AUDIENCE", value = var.azure_federation_audience },
+    { name = "AZURE_CREDENTIAL", value = "WorkloadIdentityCredential" }
   ]
 
   container_secrets = [
