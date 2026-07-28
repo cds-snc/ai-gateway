@@ -80,16 +80,18 @@ Relevant files: `terragrunt/ai_gateway/azure_variables.tf`,
 `aws_iam_role_policy.litellm_task_azure_federation` resource in
 `litellm_iam.tf`.
 
-### One-time AWS account setup (out-of-band, not managed by this Terraform)
+### AWS account setup
 
-Enable outbound identity federation once per AWS account, then record the
-issuer URL it returns:
-
-```bash
-aws iam enable-outbound-web-identity-federation
-```
-
-Use that issuer URL as `aws_outbound_federation_issuer_url`.
+`azure_openai_role.tf` includes `aws_iam_outbound_web_identity_federation.this`,
+which manages (enables) [AWS IAM Outbound Identity
+Federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_outbound_getting_started.html)
+for this account and exposes its account-specific issuer URL as
+`aws_iam_outbound_web_identity_federation.this.issuer_identifier` (also
+available as the `aws_outbound_web_identity_federation_issuer_url` output).
+This is used directly as the `issuer` on the Azure federated identity
+credential — no manual `aws iam enable-outbound-web-identity-federation`
+step is required. Note that outbound identity federation can only be
+managed by one Terraform resource per account.
 
 ### Azure inputs
 
@@ -99,7 +101,6 @@ account-specific):
 
 - `azure_tenant_id`
 - `azure_subscription_id`
-- `aws_outbound_federation_issuer_url`
 
 The applying identity/service principal needs Azure `Contributor` (or
 `Owner`) on the target subscription/resource group to create the managed

@@ -18,11 +18,16 @@
 #      which is authorized (via the custom role below) to read/regenerate
 #      Azure OpenAI keys within azurerm_resource_group.ai_gateway_openai.
 #
-# Prerequisite (one-time, out-of-band, account-level): run
-#   aws iam enable-outbound-web-identity-federation
-# and set the returned issuer URL as var.aws_outbound_federation_issuer_url.
-# See README.md for the full setup and token-exchange walkthrough.
+# Note: this Terraform manages account-level enablement of AWS IAM Outbound
+# Web Identity Federation directly via aws_iam_outbound_web_identity_federation
+# below, so no manual `aws iam enable-outbound-web-identity-federation` step
+# is required. See README.md for the full token-exchange walkthrough.
 # -----------------------------------------------------------------------------
+
+# Enables AWS IAM Outbound Web Identity Federation for this account (a
+# no-op if already enabled) and exposes the account-specific issuer URL used
+# below as the `issuer` on the Azure federated identity credential.
+resource "aws_iam_outbound_web_identity_federation" "this" {}
 
 resource "azurerm_resource_group" "ai_gateway_openai" {
   count = var.azure_create_resource_group ? 1 : 0
@@ -70,7 +75,7 @@ resource "azurerm_federated_identity_credential" "litellm_task_aws" {
   resource_group_name = var.azure_create_resource_group ? azurerm_resource_group.ai_gateway_openai[0].name : data.azurerm_resource_group.ai_gateway_openai[0].name
   parent_id           = azurerm_user_assigned_identity.litellm_openai_provisioner.id
 
-  issuer  = var.aws_outbound_federation_issuer_url
+  issuer  = aws_iam_outbound_web_identity_federation.this.issuer_identifier
   subject = aws_iam_role.litellm_task.arn
   audience = [
     var.azure_federation_audience

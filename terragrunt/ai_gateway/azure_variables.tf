@@ -38,17 +38,6 @@ variable "azure_managed_identity_name" {
   default     = "ai-gateway-litellm-openai-provisioner"
 }
 
-variable "aws_outbound_federation_issuer_url" {
-  description = <<-EOT
-    Account-specific issuer URL returned by `aws iam enable-outbound-web-identity-federation`
-    (a one-time, account-level, out-of-band step; see README for details), for example
-    "https://abc123-def456-ghi789-jkl012.tokens.sts.global.api.aws". Used as the `issuer`
-    on the Azure federated identity credential so Microsoft Entra ID trusts JWTs issued by
-    this AWS account's STS on behalf of the litellm_task IAM role.
-  EOT
-  type        = string
-}
-
 variable "azure_federation_audience" {
   description = "Audience Microsoft Entra ID expects on incoming federated tokens. Do not change unless Microsoft's guidance changes."
   type        = string

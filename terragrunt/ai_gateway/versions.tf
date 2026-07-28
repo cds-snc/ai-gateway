@@ -4,7 +4,8 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.49"
+      # >= 6.26 required for aws_iam_outbound_web_identity_federation.
+      version = ">= 6.26"
     }
     random = {
       source  = "hashicorp/random"

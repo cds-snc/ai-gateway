@@ -22,3 +22,8 @@ output "litellm_task_role_arn" {
   description = "ARN of the AWS IAM role (litellm_task) federated into Azure. This is the `sub` claim Azure validates against."
   value       = aws_iam_role.litellm_task.arn
 }
+
+output "aws_outbound_web_identity_federation_issuer_url" {
+  description = "Account-specific AWS STS issuer URL used as the `issuer` on the Azure federated identity credential."
+  value       = aws_iam_outbound_web_identity_federation.this.issuer_identifier
+}
