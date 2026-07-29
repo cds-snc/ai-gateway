@@ -17,7 +17,7 @@ inputs = {
 
 	enable_prompt_and_completion_logging = true
 
-	litellm_image                = "ghcr.io/berriai/litellm-database:v1.93.1"
+	litellm_image                = "ghcr.io/berriai/litellm-database:v1.94.0"
 	litellm_desired_count        = 1
 	litellm_force_redeploy_token = ""
 
