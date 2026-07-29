@@ -113,6 +113,8 @@ general_settings:
   use_redis_transaction_buffer: true
   master_key: os.environ/LITELLM_MASTER_KEY
   database_url: os.environ/DATABASE_URL
+  store_model_in_db: false
+  store_prompts_in_spend_logs: true
 
 litellm_settings:
   # Lets LiteLLM's azure-identity integration refresh the Entra ID access
