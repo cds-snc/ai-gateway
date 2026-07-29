@@ -74,7 +74,6 @@ variable "enable_prompt_and_completion_logging" {
 variable "litellm_image" {
   description = "Pinned LiteLLM container image tag."
   type        = string
-  default     = "ghcr.io/berriai/litellm-database:v1.90.2"
 }
 
 variable "litellm_desired_count" {
