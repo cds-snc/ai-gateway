@@ -89,6 +89,7 @@ resource "azurerm_cognitive_account" "openai" {
     purpose             = "ai-gateway"
     data-classification = var.data_classification
     managed-by          = "terraform"
+    division            = "CDS"
   }
 }
 
@@ -104,6 +105,7 @@ resource "azurerm_user_assigned_identity" "litellm_openai_provisioner" {
   tags = {
     purpose    = "ai-gateway"
     managed-by = "terraform"
+    division   = "CDS"
   }
 }
 
@@ -147,6 +149,7 @@ resource "azurerm_user_assigned_identity" "litellm_openai_inference" {
   tags = {
     purpose    = "ai-gateway"
     managed-by = "terraform"
+    division   = "CDS"
   }
 }
 
