@@ -180,10 +180,11 @@ bash scripts/list-models.sh <virtual_key> <litellm_base_url>
   --url <litellm_base_url>
 ```
 
-- List Bedrock inference-capable models or profiles in Canadian regions:
+- List Bedrock inference-capable models/profiles in a region and check access
+  (OK / marketplace subscription required / access denied):
 
 ```bash
-bash scripts/list_ca_inference_models.sh
+bash scripts/list_inference_models.sh --region ca-central-1
 ```
 
 - Validate public reachability and ALB target health:

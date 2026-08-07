@@ -11,10 +11,17 @@ credential_list:
       aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
       aws_session_name: "litellm-bedrock"
     credential_info:
-      description: "AWS Bedrock Service (IAM role)"
+      description: "AWS Bedrock Service ca-central-1 (IAM role)"
+  - credential_name: aws_bedrock_us_east_1
+    credential_values:
+      aws_region_name: us-east-1
+      aws_role_name: arn:aws:iam::986843603702:role/BedrockConsumer-litellm
+      aws_session_name: "litellm-bedrock-use1"
+    credential_info:
+      description: "AWS Bedrock Service us-east-1 (IAM role)"
 
 model_list:
-  # ── Anthropic Claude (inference profiles) ────────────────────────────────
+  # ── Anthropic Claude (cross-region inference profiles) ───────────────────
 
   - model_name: claude-haiku-4-5
     litellm_params:
@@ -28,9 +35,9 @@ model_list:
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
-  - model_name: claude-sonnet-4-6
+  - model_name: claude-opus-4-1
     litellm_params:
-      model: us.anthropic.claude-sonnet-4-6
+      model: us.anthropic.claude-opus-4-1-20250805-v1:0
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
@@ -40,13 +47,19 @@ model_list:
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
-  - model_name: claude-opus-4-6
+  # ── Amazon Nova (cross-region inference profiles) ─────────────────────────
+
+  - model_name: amazon-nova-micro
     litellm_params:
-      model: us.anthropic.claude-opus-4-6-v1
+      model: us.amazon.nova-micro-v1:0
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
-  # ── Amazon Nova ──────────────────────────────────────────────────────────
+  - model_name: amazon-nova-pro
+    litellm_params:
+      model: us.amazon.nova-pro-v1:0
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: amazon-nova-2-lite
     litellm_params:
@@ -54,23 +67,39 @@ model_list:
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
+  # ── Meta Llama (cross-region inference profiles) ──────────────────────────
+
+  - model_name: meta-llama3-3-70b
+    litellm_params:
+      model: us.meta.llama3-3-70b-instruct-v1:0
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  - model_name: meta-llama4-scout
+    litellm_params:
+      model: us.meta.llama4-scout-17b-instruct-v1:0
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  - model_name: meta-llama4-maverick
+    litellm_params:
+      model: us.meta.llama4-maverick-17b-instruct-v1:0
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  # ── Mistral (cross-region inference profile) ──────────────────────────────
+
+  - model_name: mistral-pixtral-large
+    litellm_params:
+      model: us.mistral.pixtral-large-2502-v1:0
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED"]
+
   # ── Cohere ───────────────────────────────────────────────────────────────
-
-  - model_name: cohere-embed-english
-    litellm_params:
-      model: cohere.embed-english-v3
-      litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED"]
-
-  - model_name: cohere-embed-multilingual
-    litellm_params:
-      model: cohere.embed-multilingual-v3
-      litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: cohere-embed-v4
     litellm_params:
-      model: bedrock/global.cohere.embed-v4:0
+      model: us.cohere.embed-v4:0
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
@@ -78,6 +107,54 @@ model_list:
     litellm_params:
       model: cohere.rerank-v3-5:0
       litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  # ── Amazon Rerank ─────────────────────────────────────────────────────────
+
+  - model_name: amazon-rerank
+    litellm_params:
+      model: amazon.rerank-v1:0
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  # ── Mistral (us-east-1 foundation models) ────────────────────────────────
+
+  - model_name: mistral-large-3
+    litellm_params:
+      model: mistral.mistral-large-3-675b-instruct
+      litellm_credential_name: aws_bedrock_us_east_1
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  - model_name: mistral-magistral-small
+    litellm_params:
+      model: mistral.magistral-small-2509
+      litellm_credential_name: aws_bedrock_us_east_1
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  - model_name: mistral-devstral
+    litellm_params:
+      model: mistral.devstral-2-123b
+      litellm_credential_name: aws_bedrock_us_east_1
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  # ── Google Gemma (us-east-1 foundation models) ───────────────────────────
+
+  - model_name: google-gemma-3-27b
+    litellm_params:
+      model: google.gemma-3-27b-it
+      litellm_credential_name: aws_bedrock_us_east_1
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  - model_name: google-gemma-3-12b
+    litellm_params:
+      model: google.gemma-3-12b-it
+      litellm_credential_name: aws_bedrock_us_east_1
+      tags: ["CEILING_UNCLASSIFIED"]
+
+  - model_name: google-gemma-3-4b
+    litellm_params:
+      model: google.gemma-3-4b-it
+      litellm_credential_name: aws_bedrock_us_east_1
       tags: ["CEILING_UNCLASSIFIED"]
 
   # ── Azure OpenAI (workload identity, canary) ────────────────────────────
