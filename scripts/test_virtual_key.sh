@@ -101,18 +101,7 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 
 if [[ -z "$MODEL_ALIAS" ]]; then
-  MODEL_ALIAS="$(python3 - "$CONFIG_PATH" <<'PY'
-import pathlib
-import re
-import sys
-
-text = pathlib.Path(sys.argv[1]).read_text()
-match = re.search(r"^\s*-\s*model_name:\s*['\"]?([^'\"\s#]+)['\"]?", text, re.MULTILINE)
-if not match:
-    raise SystemExit("Could not find a model_name entry in config.yaml")
-print(match.group(1))
-PY
-  )"
+  MODEL_ALIAS="$(python3 "${SCRIPT_DIR}/litellm_script_utils.py" first-model-alias --config-path "$CONFIG_PATH")"
 fi
 
 if [[ ! "$MAX_TOKENS" =~ ^[0-9]+$ ]]; then
@@ -125,24 +114,11 @@ if [[ ! "$BASE_URL" =~ ^https?:// ]]; then
   BASE_URL="https://${BASE_URL}"
 fi
 
-python3 - "$PROMPT" "$MODEL_ALIAS" "$MAX_TOKENS" <<'PY' | curl -sS \
+python3 "${SCRIPT_DIR}/litellm_script_utils.py" chat-payload \
+  --prompt "$PROMPT" \
+  --model-alias "$MODEL_ALIAS" \
+  --max-tokens "$MAX_TOKENS" | curl -sS \
   -X POST "${BASE_URL}/v1/chat/completions" \
   -H "Authorization: Bearer ${VIRTUAL_KEY}" \
   -H 'Content-Type: application/json' \
   --data-binary @-
-import json
-import sys
-
-payload = {
-    "model": sys.argv[2],
-    "messages": [
-        {
-            "role": "user",
-            "content": sys.argv[1],
-        }
-    ],
-    "max_tokens": int(sys.argv[3]),
-}
-
-print(json.dumps(payload))
-PY

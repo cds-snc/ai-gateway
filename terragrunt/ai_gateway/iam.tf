@@ -92,7 +92,8 @@ resource "aws_iam_role_policy" "bedrock_consumer_team_alpha" {
         Effect = "Allow"
         Action = [
           "bedrock:InvokeModel",
-          "bedrock:InvokeModelWithResponseStream"
+          "bedrock:InvokeModelWithResponseStream",
+          "bedrock:Rerank"
         ]
         Resource = [
           # Foundation models — all regions (global.* and us.* inference profiles

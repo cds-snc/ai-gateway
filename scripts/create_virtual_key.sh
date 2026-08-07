@@ -112,18 +112,7 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 
 if [[ -z "$MODEL_ALIAS" ]]; then
-  MODEL_ALIAS="$(python3 - "$CONFIG_PATH" <<'PY'
-import pathlib
-import re
-import sys
-
-text = pathlib.Path(sys.argv[1]).read_text()
-match = re.search(r"^\s*-\s*model_name:\s*['\"]?([^'\"\s#]+)['\"]?", text, re.MULTILINE)
-if not match:
-    raise SystemExit("Could not find a model_name entry in config.yaml")
-print(match.group(1))
-PY
-  )"
+  MODEL_ALIAS="$(python3 "${SCRIPT_DIR}/litellm_script_utils.py" first-model-alias --config-path "$CONFIG_PATH")"
 fi
 
 if [[ -z "$MASTER_KEY" ]]; then
@@ -151,29 +140,14 @@ cleanup() {
 }
 trap cleanup EXIT
 
-HTTP_STATUS="$(python3 - "$MODEL_ALIAS" "$DURATION" "$KEY_ALIAS" <<'PY' | curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' \
+HTTP_STATUS="$(python3 "${SCRIPT_DIR}/litellm_script_utils.py" key-generate-payload \
+  --model-alias "$MODEL_ALIAS" \
+  --duration "$DURATION" \
+  --key-alias "$KEY_ALIAS" | curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' \
   -X POST "${BASE_URL}/key/generate" \
   -H "Authorization: Bearer ${MASTER_KEY}" \
   -H 'Content-Type: application/json' \
   --data-binary @-
-import json
-import sys
-
-payload = {
-    "models": [sys.argv[1]],
-    "metadata": {
-        "provisioned_by": "scripts/create_virtual_key.sh",
-    },
-}
-
-if sys.argv[2]:
-    payload["duration"] = sys.argv[2]
-
-if sys.argv[3]:
-    payload["key_alias"] = sys.argv[3]
-
-print(json.dumps(payload))
-PY
 )"
 
 if [[ ! "$HTTP_STATUS" =~ ^2 ]]; then
@@ -182,22 +156,7 @@ if [[ ! "$HTTP_STATUS" =~ ^2 ]]; then
   exit 1
 fi
 
-python3 - "$RESPONSE_FILE" "$MODEL_ALIAS" "$BASE_URL" <<'PY'
-import json
-import pathlib
-import sys
-
-response = json.loads(pathlib.Path(sys.argv[1]).read_text())
-key_value = response.get("key") or response.get("token")
-
-if not key_value:
-    raise SystemExit(f"Success response did not include a key field: {response}")
-
-print(f"Generated virtual key for model alias: {sys.argv[2]}")
-print(f"LiteLLM base URL: {sys.argv[3]}")
-print(f"Virtual key: {key_value}")
-
-expires = response.get("expires") or response.get("expiration")
-if expires:
-    print(f"Expires: {expires}")
-PY
+python3 "${SCRIPT_DIR}/litellm_script_utils.py" print-generated-key \
+  --response-file "$RESPONSE_FILE" \
+  --model-alias "$MODEL_ALIAS" \
+  --base-url "$BASE_URL"
