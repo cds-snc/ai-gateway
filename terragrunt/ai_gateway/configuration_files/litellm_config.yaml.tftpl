@@ -35,12 +35,6 @@ model_list:
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED"]
 
-  - model_name: claude-opus-4-1
-    litellm_params:
-      model: us.anthropic.claude-opus-4-1-20250805-v1:0
-      litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED"]
-
   - model_name: claude-opus-4-5
     litellm_params:
       model: us.anthropic.claude-opus-4-5-20251101-v1:0
@@ -52,13 +46,13 @@ model_list:
   - model_name: amazon-nova-micro
     litellm_params:
       model: us.amazon.nova-micro-v1:0
-      litellm_credential_name: aws_bedrock
+      litellm_credential_name: aws_bedrock_us_east_1
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: amazon-nova-pro
     litellm_params:
       model: us.amazon.nova-pro-v1:0
-      litellm_credential_name: aws_bedrock
+      litellm_credential_name: aws_bedrock_us_east_1
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: amazon-nova-2-lite
@@ -72,19 +66,19 @@ model_list:
   - model_name: meta-llama3-3-70b
     litellm_params:
       model: us.meta.llama3-3-70b-instruct-v1:0
-      litellm_credential_name: aws_bedrock
+      litellm_credential_name: aws_bedrock_us_east_1
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: meta-llama4-scout
     litellm_params:
       model: us.meta.llama4-scout-17b-instruct-v1:0
-      litellm_credential_name: aws_bedrock
+      litellm_credential_name: aws_bedrock_us_east_1
       tags: ["CEILING_UNCLASSIFIED"]
 
   - model_name: meta-llama4-maverick
     litellm_params:
       model: us.meta.llama4-maverick-17b-instruct-v1:0
-      litellm_credential_name: aws_bedrock
+      litellm_credential_name: aws_bedrock_us_east_1
       tags: ["CEILING_UNCLASSIFIED"]
 
   # ── Mistral (cross-region inference profile) ──────────────────────────────
@@ -92,7 +86,7 @@ model_list:
   - model_name: mistral-pixtral-large
     litellm_params:
       model: us.mistral.pixtral-large-2502-v1:0
-      litellm_credential_name: aws_bedrock
+      litellm_credential_name: aws_bedrock_us_east_1
       tags: ["CEILING_UNCLASSIFIED"]
 
   # ── Cohere ───────────────────────────────────────────────────────────────
