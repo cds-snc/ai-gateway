@@ -29,7 +29,8 @@ resource "aws_iam_role_policy" "litellm_task" {
         Effect = "Allow"
         Action = [
           "bedrock:InvokeModel",
-          "bedrock:InvokeModelWithResponseStream"
+          "bedrock:InvokeModelWithResponseStream",
+          "bedrock:Rerank"
         ]
         Resource = [
           "arn:${data.aws_partition.current.partition}:bedrock:*::foundation-model/*",
