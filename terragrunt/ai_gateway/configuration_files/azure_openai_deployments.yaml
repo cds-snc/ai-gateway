@@ -39,8 +39,13 @@
 #   text-embedding-3-large 1           GA  retires 2028-02-09
 #   text-embedding-3-small 1           GA  retires 2028-02-09
 #
-# model_format, sku_name and capacity are optional per entry and default to
-# "OpenAI", "GlobalStandard" and 10 respectively (see azure_openai_deployments.tf).
+# model_format, sku_name, capacity, rpm and tpm are deployment settings consumed
+# by Terraform and the generated LiteLLM model list. Capacity defaults to 10;
+# rpm/tpm are explicit because Azure's RPM-to-TPM ratio varies by model.
+# Capacities below allocate the published Tier 1 GlobalStandard maximum for
+# each model as of 2026-08-11. gpt-5.5 is the exception: Azure publishes no
+# default Tier 1 quota for it, so it retains the existing known-working 10-unit
+# allocation rather than assuming an unverified custom quota increase.
 # GlobalStandard is required here: `az cognitiveservices account list-models`
 # output for this account (canadacentral) shows NO model offers the regional
 # "Standard" SKU at all -- only GlobalStandard (non-provisioned) and
@@ -58,46 +63,73 @@ deployments:
     category: "Chat / reasoning"
     model_name: gpt-5.5
     model_version: "2026-04-24"
+    capacity: 10
+    rpm: 10
+    tpm: 10000
 
   - name: gpt-5.4
     category: "Chat / reasoning"
     model_name: gpt-5.4
     model_version: "2026-03-05"
+    capacity: 1000
+    rpm: 10000
+    tpm: 1000000
 
   - name: gpt-5.4-mini
     category: "Chat / reasoning"
     model_name: gpt-5.4-mini
     model_version: "2026-03-17"
+    capacity: 1000
+    rpm: 1000
+    tpm: 1000000
 
   - name: gpt-5.4-nano
     category: "Chat / reasoning"
     model_name: gpt-5.4-nano
     model_version: "2026-03-17"
+    capacity: 5000
+    rpm: 5000
+    tpm: 5000000
 
   - name: gpt-5.6-terra
     category: "Chat / reasoning"
     model_name: gpt-5.6-terra
     model_version: "2026-07-09"
+    capacity: 1000
+    rpm: 1000
+    tpm: 1000000
 
   - name: gpt-5.6-luna
     category: "Chat / reasoning"
     model_name: gpt-5.6-luna
     model_version: "2026-07-09"
+    capacity: 1000
+    rpm: 1000
+    tpm: 1000000
 
   - name: gpt-5.6-sol
     category: "Chat / reasoning"
     model_name: gpt-5.6-sol
     model_version: "2026-07-09"
+    capacity: 1000
+    rpm: 1000
+    tpm: 1000000
 
   - name: gpt-5.2
     category: "Chat / reasoning"
     model_name: gpt-5.2
     model_version: "2025-12-11"
+    capacity: 1000
+    rpm: 10000
+    tpm: 1000000
 
   - name: gpt-5.1
     category: "Chat / reasoning"
     model_name: gpt-5.1
     model_version: "2025-11-13"
+    capacity: 1000
+    rpm: 10000
+    tpm: 1000000
 
   # gpt-5 / gpt-5-mini intentionally omitted: this account only offers them
   # under the GlobalProvisionedManaged SKU (reserved/provisioned throughput),
@@ -110,26 +142,41 @@ deployments:
     category: "Coding"
     model_name: gpt-5.3-codex
     model_version: "2026-02-24"
+    capacity: 1000
+    rpm: 10000
+    tpm: 1000000
 
   - name: gpt-5.2-codex
     category: "Coding"
     model_name: gpt-5.2-codex
     model_version: "2026-01-14"
+    capacity: 1000
+    rpm: 10000
+    tpm: 1000000
 
   - name: gpt-5.1-codex-max
     category: "Coding"
     model_name: gpt-5.1-codex-max
     model_version: "2025-12-04"
+    capacity: 1000
+    rpm: 10000
+    tpm: 1000000
 
   - name: gpt-5.1-codex
     category: "Coding"
     model_name: gpt-5.1-codex
     model_version: "2025-11-13"
+    capacity: 1000
+    rpm: 1000
+    tpm: 1000000
 
   - name: gpt-5.1-codex-mini
     category: "Coding"
     model_name: gpt-5.1-codex-mini
     model_version: "2025-11-13"
+    capacity: 1000
+    rpm: 1000
+    tpm: 1000000
 
   # ── Embeddings ────────────────────────────────────────────────────────
   # Stable, no retirement pressure.
@@ -137,11 +184,17 @@ deployments:
     category: "Embeddings"
     model_name: text-embedding-3-large
     model_version: "1"
+    capacity: 1000
+    rpm: 6000
+    tpm: 1000000
 
   - name: text-embedding-3-small
     category: "Embeddings"
     model_name: text-embedding-3-small
     model_version: "1"
+    capacity: 1000
+    rpm: 6000
+    tpm: 1000000
 
 
 
