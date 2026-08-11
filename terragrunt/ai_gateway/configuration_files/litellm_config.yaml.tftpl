@@ -21,25 +21,34 @@ credential_list:
       description: "AWS Bedrock Service us-east-1 (IAM role)"
 
 model_list:
+  # LiteLLM calls deployment limits `rpm` and `tpm`. Values below match exact
+  # AWS account quotas from quota-limits.json; unmatched Bedrock routes omit
+  # them rather than borrowing a quota from another model, region or mode.
   # ── Anthropic Claude (cross-region inference profiles) ───────────────────
 
   - model_name: claude-haiku-4-5
     litellm_params:
       model: us.anthropic.claude-haiku-4-5-20251001-v1:0
       litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED"]
+      rpm: 10000
+      tpm: 5000000
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
 
   - model_name: claude-sonnet-4-5
     litellm_params:
       model: us.anthropic.claude-sonnet-4-5-20250929-v1:0
       litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED"]
+      rpm: 10000
+      tpm: 5000000
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
 
   - model_name: claude-opus-4-5
     litellm_params:
       model: us.anthropic.claude-opus-4-5-20251101-v1:0
       litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED"]
+      rpm: 10000
+      tpm: 2000000
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
 
   # ── Amazon Nova (cross-region inference profiles) ─────────────────────────
 
@@ -59,7 +68,9 @@ model_list:
     litellm_params:
       model: us.amazon.nova-2-lite-v1:0
       litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED"]
+      rpm: 2000
+      tpm: 8000000
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
 
   # ── Meta Llama (cross-region inference profiles) ──────────────────────────
 
@@ -101,7 +112,8 @@ model_list:
     litellm_params:
       model: cohere.rerank-v3-5:0
       litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED"]
+      rpm: 250
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   # ── Amazon Rerank ─────────────────────────────────────────────────────────
 
@@ -109,7 +121,8 @@ model_list:
     litellm_params:
       model: amazon.rerank-v1:0
       litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED"]
+      rpm: 200
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   # ── Mistral (us-east-1 foundation models) ────────────────────────────────
 
@@ -173,7 +186,9 @@ model_list:
     litellm_params:
       model: azure/${d.name}
       litellm_credential_name: azure_openai
-      tags: ["CEILING_UNCLASSIFIED"]
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
 %{ endfor }
 router_settings:
   redis_host: os.environ/REDIS_HOST
