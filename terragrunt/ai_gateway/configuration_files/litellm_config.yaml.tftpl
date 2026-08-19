@@ -112,9 +112,23 @@ model_list:
 
   - model_name: amazon-nova-lite
     litellm_params:
-      model: us.amazon.nova-lite-v1:0
-      litellm_credential_name: aws_bedrock_us_east_1
-      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+      model: ca.amazon.nova-lite-v1:0
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
+
+  # ── Amazon Titan embeddings (ca-central-1 foundation models) ─────────────
+
+  - model_name: amazon-titan-embed-text-v2
+    litellm_params:
+      model: amazon.titan-embed-text-v2:0
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
+
+  - model_name: amazon-titan-embed-image-v1
+    litellm_params:
+      model: amazon.titan-embed-image-v1
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   # ── Meta Llama (cross-region inference profiles) ──────────────────────────
 
@@ -151,14 +165,14 @@ model_list:
   - model_name: meta-llama3-8b
     litellm_params:
       model: meta.llama3-8b-instruct-v1:0
-      litellm_credential_name: aws_bedrock_us_east_1
-      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   - model_name: meta-llama3-70b
     litellm_params:
       model: meta.llama3-70b-instruct-v1:0
-      litellm_credential_name: aws_bedrock_us_east_1
-      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   # ── Mistral (cross-region inference profile) ──────────────────────────────
 
@@ -186,14 +200,14 @@ model_list:
   - model_name: cohere-embed-english
     litellm_params:
       model: cohere.embed-english-v3
-      litellm_credential_name: aws_bedrock_us_east_1
-      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   - model_name: cohere-embed-multilingual
     litellm_params:
       model: cohere.embed-multilingual-v3
-      litellm_credential_name: aws_bedrock_us_east_1
-      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   # ── Amazon Rerank ─────────────────────────────────────────────────────────
 
@@ -237,26 +251,26 @@ model_list:
   - model_name: mistral-7b
     litellm_params:
       model: mistral.mistral-7b-instruct-v0:2
-      litellm_credential_name: aws_bedrock_us_east_1
-      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   - model_name: mistral-mixtral-8x7b
     litellm_params:
       model: mistral.mixtral-8x7b-instruct-v0:1
-      litellm_credential_name: aws_bedrock_us_east_1
-      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   - model_name: mistral-large-2402
     litellm_params:
       model: mistral.mistral-large-2402-v1:0
-      litellm_credential_name: aws_bedrock_us_east_1
-      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   - model_name: mistral-small-2402
     litellm_params:
       model: mistral.mistral-small-2402-v1:0
-      litellm_credential_name: aws_bedrock_us_east_1
-      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1"]
 
   # ── Mistral (us-east-1 foundation models) ────────────────────────────────
 
@@ -350,6 +364,131 @@ model_list:
       litellm_credential_name: aws_bedrock_us_east_1
       tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
 
+  # ── OpenAI GPT-5.6 (us-east-1 inference profiles) ────────────────────────
+
+  - model_name: openai-gpt-5.6-terra
+    litellm_params:
+      model: us.openai.gpt-5.6-terra
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-terra-low
+    litellm_params:
+      model: us.openai.gpt-5.6-terra
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: low
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-terra-medium
+    litellm_params:
+      model: us.openai.gpt-5.6-terra
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: medium
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-terra-high
+    litellm_params:
+      model: us.openai.gpt-5.6-terra
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: high
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-terra-xhigh
+    litellm_params:
+      model: us.openai.gpt-5.6-terra
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: xhigh
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-terra-max
+    litellm_params:
+      model: us.openai.gpt-5.6-terra
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: max
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-luna
+    litellm_params:
+      model: us.openai.gpt-5.6-luna
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-luna-low
+    litellm_params:
+      model: us.openai.gpt-5.6-luna
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: low
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-luna-medium
+    litellm_params:
+      model: us.openai.gpt-5.6-luna
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: medium
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-luna-high
+    litellm_params:
+      model: us.openai.gpt-5.6-luna
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: high
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-luna-xhigh
+    litellm_params:
+      model: us.openai.gpt-5.6-luna
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: xhigh
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-luna-max
+    litellm_params:
+      model: us.openai.gpt-5.6-luna
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: max
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-sol
+    litellm_params:
+      model: us.openai.gpt-5.6-sol
+      litellm_credential_name: aws_bedrock
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-sol-low
+    litellm_params:
+      model: us.openai.gpt-5.6-sol
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: low
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-sol-medium
+    litellm_params:
+      model: us.openai.gpt-5.6-sol
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: medium
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-sol-high
+    litellm_params:
+      model: us.openai.gpt-5.6-sol
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: high
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-sol-xhigh
+    litellm_params:
+      model: us.openai.gpt-5.6-sol
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: xhigh
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
+  - model_name: openai-gpt-5.6-sol-max
+    litellm_params:
+      model: us.openai.gpt-5.6-sol
+      litellm_credential_name: aws_bedrock
+      reasoning_effort: max
+      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+
   # ── Writer ─────────────────────────────────────────────────────────────────
 
   - model_name: writer-palmyra-vision-7b
@@ -395,6 +534,54 @@ model_list:
       rpm: ${d.rpm}
       tpm: ${d.tpm}
       tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+%{ if contains(["gpt-5.6-terra", "gpt-5.6-luna", "gpt-5.6-sol"], d.name) ~}
+
+  # Fixed reasoning effort aliases for clients that cannot pass reasoning_effort.
+  - model_name: ${d.name}-low
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: low
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+
+  - model_name: ${d.name}-medium
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: medium
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+
+  - model_name: ${d.name}-high
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: high
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+
+  - model_name: ${d.name}-xhigh
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: xhigh
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+
+  - model_name: ${d.name}-max
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: max
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+%{ endif ~}
 %{ endfor }
 router_settings:
   redis_host: os.environ/REDIS_HOST
