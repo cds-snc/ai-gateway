@@ -534,6 +534,54 @@ model_list:
       rpm: ${d.rpm}
       tpm: ${d.tpm}
       tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+%{ if contains(["gpt-5.6-terra", "gpt-5.6-luna", "gpt-5.6-sol"], d.name) ~}
+
+  # Fixed reasoning effort aliases for clients that cannot pass reasoning_effort.
+  - model_name: ${d.name}-low
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: low
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+
+  - model_name: ${d.name}-medium
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: medium
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+
+  - model_name: ${d.name}-high
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: high
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+
+  - model_name: ${d.name}-xhigh
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: xhigh
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+
+  - model_name: ${d.name}-max
+    litellm_params:
+      model: azure/${d.name}
+      litellm_credential_name: azure_openai
+      reasoning_effort: max
+      rpm: ${d.rpm}
+      tpm: ${d.tpm}
+      tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"]
+%{ endif ~}
 %{ endfor }
 router_settings:
   redis_host: os.environ/REDIS_HOST
