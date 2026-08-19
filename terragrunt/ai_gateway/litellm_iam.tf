@@ -40,6 +40,12 @@ resource "aws_iam_role_policy" "litellm_task" {
         ]
       },
       {
+        Sid      = "AllowBedrockMantleInvoke"
+        Effect   = "Allow"
+        Action   = "bedrock-mantle:CreateInference"
+        Resource = "*"
+      },
+      {
         Sid    = "AllowBedrockListModels"
         Effect = "Allow"
         Action = [
