@@ -1,0 +1,467 @@
+[
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Opus 4.6 V1",
+        "Value": 3000000.0,
+        "Code": "L-0AD9BBE8"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Anthropic Claude Sonnet 4.6",
+        "Value": 10000.0,
+        "Code": "L-F6E116D7"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude Haiku 4.5",
+        "Value": 10000.0,
+        "Code": "L-CCA5DF70"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Amazon Titan Text Express",
+        "Value": 300000.0,
+        "Code": "L-44992E63"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Amazon Nova Lite",
+        "Value": 400.0,
+        "Code": "L-89F8391A"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Amazon Nova 2 Lite",
+        "Value": 2000.0,
+        "Code": "L-D5F39C2F"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Opus 4.7",
+        "Value": 30000000.0,
+        "Code": "L-5DB28B7B"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Meta Llama 3 8B Instruct",
+        "Value": 800.0,
+        "Code": "L-320BEFEB"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.5 V1 1M Context Length",
+        "Value": 1000000.0,
+        "Code": "L-8EA73537"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Cohere Embed English",
+        "Value": 300000.0,
+        "Code": "L-A2BE277A"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude Sonnet 4.5 V1 1M Context Length",
+        "Value": 1000.0,
+        "Code": "L-A052927A"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Opus 5",
+        "Value": 30000000.0,
+        "Code": "L-99296DCD"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Fable 5",
+        "Value": 4000000.0,
+        "Code": "L-D06938E7"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude Opus 4.5",
+        "Value": 10000.0,
+        "Code": "L-27989F42"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Amazon Titan Text Embeddings",
+        "Value": 2000.0,
+        "Code": "L-879F6850"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Opus 4.5",
+        "Value": 2000000.0,
+        "Code": "L-7007E9C9"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Amazon Nova 2 Omni",
+        "Value": 8000000.0,
+        "Code": "L-21800074"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Amazon Nova Micro",
+        "Value": 200000.0,
+        "Code": "L-CFA4FA0D"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Amazon Nova 2 Pro Preview",
+        "Value": 1000000.0,
+        "Code": "L-F0AF140A"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Opus 4.8",
+        "Value": 30000000.0,
+        "Code": "L-4FCE27C7"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Haiku 4.5",
+        "Value": 5000000.0,
+        "Code": "L-58BE175A"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Amazon Titan Text Embeddings",
+        "Value": 300000.0,
+        "Code": "L-74B5B793"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Haiku 4.5",
+        "Value": 5000000.0,
+        "Code": "L-9A11C666"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.5 V1 1M Context Length",
+        "Value": 1000000.0,
+        "Code": "L-4B26E44A"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Cohere Embed V4",
+        "Value": 2000.0,
+        "Code": "L-7089DC7D"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude Sonnet 4 V1",
+        "Value": 200.0,
+        "Code": "L-559DCC33"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Meta Llama 3 8B Instruct",
+        "Value": 300000.0,
+        "Code": "L-03A9B835"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Sonnet 4 V1 1M Context Length",
+        "Value": 1000000.0,
+        "Code": "L-1FA095B8"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Sonnet 4 V1",
+        "Value": 200000.0,
+        "Code": "L-59759B4A"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Amazon Nova Pro",
+        "Value": 250.0,
+        "Code": "L-F2717A44"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Opus 4.6 V1",
+        "Value": 3000000.0,
+        "Code": "L-3DCCFAA4"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude Sonnet 4.5 V1",
+        "Value": 10000.0,
+        "Code": "L-4A6BFAB1"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Amazon Titan Text Embeddings V2",
+        "Value": 6000.0,
+        "Code": "L-26C560CE"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Anthropic Claude 3 Sonnet",
+        "Value": 200000.0,
+        "Code": "L-4C35BB2A"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Amazon Nova Lite",
+        "Value": 200000.0,
+        "Code": "L-70423BF8"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Meta Llama 3 70B Instruct",
+        "Value": 400.0,
+        "Code": "L-46D383AF"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Sonnet 5",
+        "Value": 6000000.0,
+        "Code": "L-DD84E5CA"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Meta Llama 3 70B Instruct",
+        "Value": 300000.0,
+        "Code": "L-609E24B0"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Opus 4.7",
+        "Value": 30000000.0,
+        "Code": "L-34152C1D"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.6",
+        "Value": 6000000.0,
+        "Code": "L-15B8E632"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Amazon Nova 2 Lite",
+        "Value": 8000000.0,
+        "Code": "L-71C69B70"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Amazon Titan Multimodal Embeddings G1",
+        "Value": 300000.0,
+        "Code": "L-ABC24664"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Opus 5",
+        "Value": 30000000.0,
+        "Code": "L-D73B1244"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Opus 4.8",
+        "Value": 30000000.0,
+        "Code": "L-DB99DCDB"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude 3 Haiku",
+        "Value": 800.0,
+        "Code": "L-616A3F5B"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Cohere Embed V4",
+        "Value": 300000.0,
+        "Code": "L-02DFBB76"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Mistral 7B Instruct",
+        "Value": 800.0,
+        "Code": "L-D9A35062"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Anthropic Claude 3 Sonnet",
+        "Value": 100.0,
+        "Code": "L-F406804E"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Amazon Nova 2 Lite",
+        "Value": 2000.0,
+        "Code": "L-F06F1187"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Amazon Nova Pro",
+        "Value": 1000000.0,
+        "Code": "L-CE33604C"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Fable 5",
+        "Value": 4000000.0,
+        "Code": "L-9B258944"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Amazon Titan Image Generator G1",
+        "Value": 60.0,
+        "Code": "L-7DBB06FD"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Amazon Nova 2 Omni",
+        "Value": 2000.0,
+        "Code": "L-DCD79770"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Amazon Nova 2 Pro Preview",
+        "Value": 1000000.0,
+        "Code": "L-6B796A8E"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Amazon Nova 2 Pro Preview",
+        "Value": 100.0,
+        "Code": "L-A3425ABD"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Amazon Nova 2 Omni",
+        "Value": 2000.0,
+        "Code": "L-91A570FD"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude 3 Haiku",
+        "Value": 600000.0,
+        "Code": "L-DCADBC78"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.5 V1",
+        "Value": 5000000.0,
+        "Code": "L-27C57EE8"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Mistral AI Mistral Large",
+        "Value": 300000.0,
+        "Code": "L-01447289"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Amazon Nova 2 Lite",
+        "Value": 8000000.0,
+        "Code": "L-C6F5908D"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude 3 Sonnet",
+        "Value": 400000.0,
+        "Code": "L-5DF13F64"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude Opus 4.6 V1",
+        "Value": 10000.0,
+        "Code": "L-11DFF789"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude 3 Sonnet",
+        "Value": 200.0,
+        "Code": "L-46591118"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude Sonnet 4.6",
+        "Value": 10000.0,
+        "Code": "L-00FF3314"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Amazon Nova Lite",
+        "Value": 400000.0,
+        "Code": "L-7C42E72A"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Amazon Titan Text Express",
+        "Value": 400.0,
+        "Code": "L-9EAB0D12"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Cohere Rerank 3.5",
+        "Value": 250.0,
+        "Code": "L-11512E58"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Anthropic Claude Sonnet 4.5 V1 1M Context Length",
+        "Value": 1000.0,
+        "Code": "L-C0D53EFB"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Anthropic Claude Sonnet 4 V1 1M Context Length",
+        "Value": 10.0,
+        "Code": "L-534E5E05"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Anthropic Claude Haiku 4.5",
+        "Value": 10000.0,
+        "Code": "L-E5084BBA"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.6",
+        "Value": 6000000.0,
+        "Code": "L-7BEE40FB"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Sonnet 4.5 V1",
+        "Value": 5000000.0,
+        "Code": "L-F4DDD3EB"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Anthropic Claude Opus 4.5",
+        "Value": 10000.0,
+        "Code": "L-58424D95"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Mistral Mixtral 8x7b Instruct",
+        "Value": 400.0,
+        "Code": "L-FD938632"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Mistral AI Mistral 7B Instruct",
+        "Value": 300000.0,
+        "Code": "L-02D831F1"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Amazon Nova Lite",
+        "Value": 200.0,
+        "Code": "L-E386A278"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Cohere Embed Multilingual",
+        "Value": 2000.0,
+        "Code": "L-9E5BD0C6"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Amazon Titan Text Embeddings V2",
+        "Value": 300000.0,
+        "Code": "L-DE641971"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Anthropic Claude Opus 4.6 V1",
+        "Value": 10000.0,
+        "Code": "L-3DD46812"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Amazon Nova Micro",
+        "Value": 200.0,
+        "Code": "L-E118F160"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Amazon Titan Multimodal Embeddings G1",
+        "Value": 2000.0,
+        "Code": "L-DF0E34D4"
+    },
+    {
+        "Name": "Cross-region model inference requests per minute for Amazon Nova 2 Pro Preview",
+        "Value": 100.0,
+        "Code": "L-3B97F1DC"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Cohere Embed English",
+        "Value": 2000.0,
+        "Code": "L-FF8E7864"
+    },
+    {
+        "Name": "Global cross-region model inference tokens per minute for Anthropic Claude Opus 4.5",
+        "Value": 2000000.0,
+        "Code": "L-3ABF6ACC"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Mistral Large",
+        "Value": 400.0,
+        "Code": "L-3AF844DB"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Amazon Rerank 1.0",
+        "Value": 200.0,
+        "Code": "L-AAB0080F"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Cohere Embed Multilingual",
+        "Value": 300000.0,
+        "Code": "L-C2F86908"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Anthropic Claude Sonnet 5",
+        "Value": 6000000.0,
+        "Code": "L-D4FBCF4E"
+    },
+    {
+        "Name": "Global cross-region model inference requests per minute for Anthropic Claude Sonnet 4.5 V1",
+        "Value": 10000.0,
+        "Code": "L-DB84CE56"
+    },
+    {
+        "Name": "On-demand model inference requests per minute for Anthropic Claude 3 Haiku",
+        "Value": 400.0,
+        "Code": "L-2DC80978"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Anthropic Claude 3 Haiku",
+        "Value": 300000.0,
+        "Code": "L-8CE99163"
+    },
+    {
+        "Name": "On-demand model inference tokens per minute for Mistral AI Mixtral 8X7BB Instruct",
+        "Value": 300000.0,
+        "Code": "L-490F4D1F"
+    },
+    {
+        "Name": "Cross-region model inference tokens per minute for Amazon Nova 2 Omni",
+        "Value": 8000000.0,
+        "Code": "L-2438ED67"
+    }
+]
