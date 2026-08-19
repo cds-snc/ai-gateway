@@ -19,9 +19,10 @@ AI Gateway. The source inventory for the review was `models.txt`, generated for
    inference-profile prefix, access result, and lifecycle status in the review
    notes or inventory.
 
-The China-developed restriction is based on provider origin, not the AWS region
-used to serve the request. A cross-region inference profile remains excluded if
-its underlying provider is on the restricted list.
+The provider restrictions are based on provider origin or explicit gateway
+policy, not the AWS region used to serve the request. A cross-region inference
+profile remains excluded if its underlying provider or model is on the
+restricted list.
 
 ## AWS Legacy and EOL Models
 
@@ -53,10 +54,10 @@ published dates.
 
 Source: [Amazon Bedrock model lifecycle](https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle.html)
 
-## China-Developed Providers
+## Excluded Providers and Models
 
-The following providers are excluded from the gateway by policy. The listed
-IDs are the models found in the 2026-08-19 `us-east-1` inventory, including
+The following providers or models are excluded from the gateway by policy. The
+listed IDs are models found in the 2026-08-19 inventories, including
 system-defined inference profiles.
 
 | Provider | Organization / model family | Bedrock model IDs excluded |
@@ -66,10 +67,13 @@ system-defined inference profiles.
 | Kimi / Moonshot AI | Moonshot AI | `moonshotai.kimi-k2.5`; `moonshot.kimi-k2-thinking` |
 | MiniMax | MiniMax | `minimax.minimax-m2`; `minimax.minimax-m2.1`; `minimax.minimax-m2.5` |
 | Z.AI | Zhipu AI / Z.AI | `zai.glm-4.7-flash`; `zai.glm-4.7`; `zai.glm-5` |
+| xAI | xAI | `us.xai.grok-4.6` |
 
-These 15 IDs were removed from
+These 16 IDs were removed from
 `terragrunt/ai_gateway/configuration_files/litellm_config.yaml.tftpl` on
-2026-08-19. They must not be reintroduced under a new LiteLLM alias.
+2026-08-19. They must not be reintroduced under a new LiteLLM alias. The xAI
+profile was identified in the `ca-central-1` inventory and is excluded by
+gateway policy despite being reachable.
 
 ## Adding a Future Model
 

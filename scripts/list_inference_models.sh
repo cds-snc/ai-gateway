@@ -162,6 +162,30 @@ classify() {
 tmp_body="$(mktemp)"
 trap 'rm -f "$tmp_body"' EXIT
 
+invoke_openai_model() {
+  local model_id="$1"
+  local request_body
+  printf -v request_body '{"model":"%s","messages":[{"role":"user","content":"ping"}],"max_completion_tokens":8,"stream":false}' "$model_id"
+  aws bedrock-runtime invoke-model \
+    --region "$REGION" \
+    --model-id "$model_id" \
+    --body "$request_body" \
+    --cli-binary-format raw-in-base64-out \
+    "$tmp_body"
+}
+
+invoke_xai_model() {
+  local model_id="$1"
+  local request_body
+  printf -v request_body '{"messages":[{"role":"user","content":"ping"}],"max_tokens":8,"stream":false}'
+  aws bedrock-runtime invoke-model \
+    --region "$REGION" \
+    --model-id "$model_id" \
+    --body "$request_body" \
+    --cli-binary-format raw-in-base64-out \
+    "$tmp_body"
+}
+
 # Test-invokes a single model/profile id and echoes back a classified result.
 # Skips the network call (and prints "NOT TESTED") when --skip-access-check
 # is set, since PROVISIONED-only models can't be invoked without a
@@ -184,6 +208,12 @@ test_access() {
       --sources '[{"inlineDocumentSource":{"textDocument":{"text":"pong"},"type":"TEXT"},"type":"INLINE"}]' \
       --reranking-configuration "{\"bedrockRerankingConfiguration\":{\"modelConfiguration\":{\"modelArn\":\"${model_arn}\"},\"numberOfResults\":1},\"type\":\"BEDROCK_RERANKING_MODEL\"}" \
       2>&1)"
+    rc=$?
+  elif [[ "$model_id" == *openai* ]]; then
+    output="$(invoke_openai_model "$model_id" 2>&1)"
+    rc=$?
+  elif [[ "$model_id" == *xai* ]]; then
+    output="$(invoke_xai_model "$model_id" 2>&1)"
     rc=$?
   elif [[ "$model_id" == *embed* ]]; then
     output="$(aws bedrock-runtime invoke-model \
