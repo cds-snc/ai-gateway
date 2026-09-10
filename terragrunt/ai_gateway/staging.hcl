@@ -25,7 +25,7 @@ inputs = {
 	litellm_database_username = "litellm_admin"
 	litellm_postgres_ssl_mode = "require"
 
-	litellm_rds_engine_version          = "16.4"
+	litellm_rds_engine_version          = "16.11"
 	litellm_rds_instance_class          = "db.serverless"
 	litellm_rds_instances               = 1
 	litellm_rds_serverless_min_capacity = 0.5

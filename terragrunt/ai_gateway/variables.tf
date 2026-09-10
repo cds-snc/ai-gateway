@@ -121,7 +121,6 @@ variable "litellm_postgres_ssl_mode" {
 variable "litellm_rds_engine_version" {
   description = "Aurora PostgreSQL engine version for LiteLLM storage."
   type        = string
-  default     = "16.4"
 }
 
 variable "litellm_rds_instance_class" {
