@@ -266,6 +266,21 @@ variable "public_ingress_cidrs" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "waf_rate_limit_per_5_minutes" {
+  description = "Maximum requests per five-minute window from one IP before the ALB WAF blocks it."
+  type        = number
+  default     = 100
+
+  validation {
+    condition = (
+      var.waf_rate_limit_per_5_minutes >= 100 &&
+      var.waf_rate_limit_per_5_minutes <= 2000000000 &&
+      var.waf_rate_limit_per_5_minutes == floor(var.waf_rate_limit_per_5_minutes)
+    )
+    error_message = "waf_rate_limit_per_5_minutes must be an integer between 100 and 2,000,000,000."
+  }
+}
+
 variable "enable_alb_access_logs" {
   description = "Enable ALB access log delivery to the shared S3 bucket."
   type        = bool

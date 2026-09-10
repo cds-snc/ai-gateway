@@ -12,6 +12,7 @@ This repository contains the staging infrastructure for an AWS Bedrock gateway b
 
 - VPC, subnets, and Bedrock interface endpoints
 - LiteLLM on ECS Fargate behind an ALB with HTTPS support
+- Regional AWS WAF protection for the public LiteLLM ALB
 - Aurora PostgreSQL for LiteLLM persistent storage
 - Redis for optional synchronization and caching
 - IAM roles and policies for Bedrock access
@@ -37,6 +38,7 @@ Review and update values there before planning or applying, especially:
 - `allowed_endpoint_ingress_cidrs`
 - `gateway_domain_name`
 - `gateway_certificate_arn`
+- `waf_rate_limit_per_5_minutes`
 
 `terragrunt/ai_gateway/terragrunt.hcl` also reads these environment variables:
 
@@ -141,6 +143,24 @@ JWT for a short-lived Entra ID access token automatically
 (`litellm_settings.enable_azure_ad_token_refresh: true` in
 `configuration_files/litellm_config.yaml`). No `AZURE_API_KEY` is ever set on
 the LiteLLM container.
+
+## WAF Protection
+
+The public LiteLLM ALB is protected by a regional AWS WAF Web ACL. It
+enforces the AWS-managed common, known-bad-inputs, IP-reputation, anonymous-IP,
+and SQL injection rule groups, plus a per-IP rate limit. The default rate limit
+is 100 requests per five minutes (20 per minute) and can be changed with
+`waf_rate_limit_per_5_minutes`.
+
+The limit is keyed by source IP. If many staff members share one corporate NAT
+or VPN egress IP, increase the value to avoid a shared office address being
+throttled as a single client.
+
+The common rule group's `SizeRestrictions_BODY` rule is set to count rather
+than block. ALB-associated WAF inspection is limited to 8 KiB, while valid
+LLM prompts can be larger; the other managed rules still inspect the portion
+available to WAF. The WAF ACL ARN is available from the
+`litellm_waf_web_acl_arn` Terraform output.
 
 ## Deploy
 
