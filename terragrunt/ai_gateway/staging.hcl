@@ -49,7 +49,7 @@ inputs = {
 
 	approved_public_listener_ports = [80, 443]
 	public_ingress_cidrs           = ["0.0.0.0/0"]
-	waf_rate_limit_per_5_minutes   = 100
+	waf_rate_limit_per_5_minutes   = 2000
 
 	enable_alb_access_logs = true
 	alb_access_logs_prefix = "alb-access"
