@@ -1,10 +1,12 @@
-# Bedrock Model Selection Policy
+# AI Gateway Model Selection Policy
 
-Last reviewed: 2026-08-19
+Last reviewed: 2026-10-06
 
-This document is the reference checklist for adding Amazon Bedrock models to the
-AI Gateway. The source inventory for the review was `models.txt`, generated for
-`us-east-1` on 2026-08-19.
+This document is the reference checklist for curating models exposed through the
+AI Gateway. The October review uses the configured Bedrock and Azure model lists
+and the local `models.json` access scan (plain-text output for `ca-central-1`,
+despite its extension). It does not certify live availability or establish that
+these are the latest releases outside the configured catalog.
 
 ## Selection Rules
 
@@ -18,11 +20,57 @@ AI Gateway. The source inventory for the review was `models.txt`, generated for
 6. When adding a model, record its exact Bedrock model ID, provider, region or
    inference-profile prefix, access result, and lifecycle status in the review
    notes or inventory.
+7. Leave existing models tagged `archived` unchanged, including their aliases,
+   reasoning settings, quotas, and routing. The curation rules below apply only
+   to non-archived choices; archived models are retained for existing consumers.
+8. Keep only the newest configured version per distinct model family or role.
+   Keep separate cost tiers or specialist capabilities only when they serve a
+   distinct purpose, and reduce redundant size variants within a family.
+9. Expose `-low`, `-medium`, and `-high` aliases for active reasoning models that
+   support adjustable effort. Set `reasoning_effort` on the server so clients do
+   not need to supply it. Do not invent effort controls for models with fixed or
+   automatic reasoning. Existing archived reasoning aliases remain unchanged.
+10. Retain at least one embedding model and one image-understanding model.
 
 The provider restrictions are based on provider origin or explicit gateway
 policy, not the AWS region used to serve the request. A cross-region inference
 profile remains excluded if its underlying provider or model is on the
 restricted list.
+
+## Curated Choices
+
+The October review removes 29 active aliases, reducing base choices from 49 to
+20. The eight adjustable reasoning models have three explicit presets each,
+giving 44 active aliases including presets. All 42 archived aliases are retained.
+Azure deployments are unchanged; their aliases are generated from the deployment
+YAML, and reasoning presets share the existing deployment rather than creating
+additional Azure resources.
+
+| Provider | Retained non-archived families | Selection rationale |
+| --- | --- | --- |
+| Anthropic | Claude Sonnet 5.5, Opus 5.5 | Latest configured version of each tier; low/medium/high presets |
+| OpenAI / Bedrock | GPT-6.1 Sol, GPT-6 Luna, GPT-6 Astra | Latest configured version per tier; low/medium/high presets |
+| OpenAI / Azure | GPT-5.4 Mini, GPT-5.3 Codex | Small-model and coding roles; low/medium/high presets |
+| OpenAI / Azure | Text Embedding 3 Large, Small | Current embedding generation with quality/cost tiers |
+| Amazon | Nova 2 Lite | Replaces older Nova chat choices; low/medium/high presets |
+| Cohere | Embed v4, Rerank v3.5 | One Bedrock embedding and reranking choice; remove v3 embeddings and overlapping Titan/Amazon Rerank entries |
+| Meta | Llama 4 Maverick | One current-generation Llama tier with vision; drop Scout |
+| Mistral | Large 3 | One general-purpose Mistral choice; remove overlapping Ministral sizes |
+| Mistral | Voxtral Small, Magistral Small, Devstral 2 | Audio, reasoning, and coding roles; drop Voxtral Mini |
+| Google | Gemma 3 27B | One vision-capable Gemma size instead of three |
+| NVIDIA | Nemotron Super 3 120B | One current-generation NVIDIA choice; drop Nano variants |
+| Writer | Palmyra X5 | One Palmyra choice; remove the separate Vision 7B entry |
+
+Magistral Small and Nemotron Super retain their base reasoning-capable aliases;
+the review does not establish an adjustable Bedrock effort control for them.
+Vision remains available through Claude, OpenAI, Llama 4, Gemma 3, and Nova 2
+Lite, so removing Palmyra Vision does not remove image understanding.
+
+The old Canada-only `amazon-nova-lite` chat route is removed in favor of Nova 2
+Lite's US cross-region profile. This is not a Canada-only replacement; consumers
+requiring Canadian-only chat processing need a separately verified current model.
+No removed alias is silently redirected to a different model. Keys or clients
+referencing removed non-archived aliases must select a retained model.
 
 ## AWS Legacy and EOL Models
 
@@ -56,9 +104,11 @@ Source: [Amazon Bedrock model lifecycle](https://docs.aws.amazon.com/bedrock/lat
 
 ## Excluded Providers and Models
 
-The following providers or models are excluded from the gateway by policy. The
+The following providers or models are excluded from new active choices by policy. The
 listed IDs are models found in the 2026-08-19 inventories, including
-system-defined inference profiles.
+system-defined inference profiles. Restrictions apply to all versions, not just
+the IDs in this historical table. xAI is US-based and is excluded by the existing
+gateway policy, not by the China-origin rule.
 
 | Provider | Organization / model family | Bedrock model IDs excluded |
 | --- | --- | --- |
@@ -74,6 +124,9 @@ These 16 IDs were removed from
 2026-08-19. They must not be reintroduced under a new LiteLLM alias. The xAI
 profile was identified in the `ca-central-1` inventory and is excluded by
 gateway policy despite being reachable.
+The subsequently configured `us.xai.grok-4.7` alias was also removed in the
+October review. No non-archived China-origin model was present in the configured
+list at that review; newer Kimi and Z.AI entries in the inventory remain excluded.
 
 ## Adding a Future Model
 
@@ -90,7 +143,10 @@ Before editing `litellm_config.yaml.tftpl`:
    for the exact model or profile ID.
 6. Add the exact ID and an intentional, stable LiteLLM alias. Keep the regional
    credential and routing tags consistent with nearby entries.
-7. Update this document when a new provider family is excluded or AWS adds a
+7. Remove superseded non-archived versions in the same family. Preserve archived
+   entries, confirm embedding and vision coverage, and add fixed effort aliases
+   only where the provider and deployed LiteLLM version support them.
+8. Update this document when a new provider family is excluded or AWS adds a
    lifecycle entry.
 
 This policy does not infer that every model absent from the AWS Legacy/EOL table

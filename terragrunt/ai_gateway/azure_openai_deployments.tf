@@ -37,6 +37,7 @@ locals {
       model_format    = try(d.model_format, "OpenAI")
       sku_name        = try(d.sku_name, "GlobalStandard")
       capacity        = try(d.capacity, 10)
+      archived        = try(d.archived, false)
       is_new_category = idx == 0 ? true : d.category != local.azure_openai_deployments_list[idx - 1].category
     })
   ]

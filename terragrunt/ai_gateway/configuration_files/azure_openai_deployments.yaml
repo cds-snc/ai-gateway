@@ -29,13 +29,7 @@
 #   gpt-5.4-mini            2026-03-17  GA  retires 2027-03-18
 #   gpt-5.4-nano            2026-03-17  GA  retires 2027-03-18
 #   gpt-5.6-terra/luna/sol 2026-07-09  GA  retires 2027-07-09
-#   gpt-5.2                2025-12-11  GA  retires 2026-12-12
-#   gpt-5.1                2025-11-13  GA  retires 2027-05-15
 #   gpt-5.3-codex          2026-02-24  GA  retires 2027-02-25
-#   gpt-5.2-codex          2026-01-14  GA  retires 2027-01-14
-#   gpt-5.1-codex-max      2025-12-04  GA  retires 2026-12-05
-#   gpt-5.1-codex          2025-11-13  GA  retires 2027-05-15
-#   gpt-5.1-codex-mini     2025-11-13  GA  retires 2027-05-15
 #   text-embedding-3-large 1           GA  retires 2028-02-09
 #   text-embedding-3-small 1           GA  retires 2028-02-09
 #
@@ -59,22 +53,6 @@
 
 deployments:
   # ── Chat / reasoning ──────────────────────────────────────────────────
-  - name: gpt-5.5
-    category: "Chat / reasoning"
-    model_name: gpt-5.5
-    model_version: "2026-04-24"
-    capacity: 10
-    rpm: 10
-    tpm: 10000
-
-  - name: gpt-5.4
-    category: "Chat / reasoning"
-    model_name: gpt-5.4
-    model_version: "2026-03-05"
-    capacity: 1000
-    rpm: 10000
-    tpm: 1000000
-
   - name: gpt-5.4-mini
     category: "Chat / reasoning"
     model_name: gpt-5.4-mini
@@ -87,49 +65,10 @@ deployments:
     category: "Chat / reasoning"
     model_name: gpt-5.4-nano
     model_version: "2026-03-17"
+    archived: true
     capacity: 5000
     rpm: 5000
     tpm: 5000000
-
-  - name: gpt-5.6-terra
-    category: "Chat / reasoning"
-    model_name: gpt-5.6-terra
-    model_version: "2026-07-09"
-    capacity: 1000
-    rpm: 1000
-    tpm: 1000000
-
-  - name: gpt-5.6-luna
-    category: "Chat / reasoning"
-    model_name: gpt-5.6-luna
-    model_version: "2026-07-09"
-    capacity: 1000
-    rpm: 1000
-    tpm: 1000000
-
-  - name: gpt-5.6-sol
-    category: "Chat / reasoning"
-    model_name: gpt-5.6-sol
-    model_version: "2026-07-09"
-    capacity: 1000
-    rpm: 1000
-    tpm: 1000000
-
-  - name: gpt-5.2
-    category: "Chat / reasoning"
-    model_name: gpt-5.2
-    model_version: "2025-12-11"
-    capacity: 1000
-    rpm: 10000
-    tpm: 1000000
-
-  - name: gpt-5.1
-    category: "Chat / reasoning"
-    model_name: gpt-5.1
-    model_version: "2025-11-13"
-    capacity: 1000
-    rpm: 10000
-    tpm: 1000000
 
   # gpt-5 / gpt-5-mini intentionally omitted: this account only offers them
   # under the GlobalProvisionedManaged SKU (reserved/provisioned throughput),
@@ -144,38 +83,6 @@ deployments:
     model_version: "2026-02-24"
     capacity: 1000
     rpm: 10000
-    tpm: 1000000
-
-  - name: gpt-5.2-codex
-    category: "Coding"
-    model_name: gpt-5.2-codex
-    model_version: "2026-01-14"
-    capacity: 1000
-    rpm: 10000
-    tpm: 1000000
-
-  - name: gpt-5.1-codex-max
-    category: "Coding"
-    model_name: gpt-5.1-codex-max
-    model_version: "2025-12-04"
-    capacity: 1000
-    rpm: 10000
-    tpm: 1000000
-
-  - name: gpt-5.1-codex
-    category: "Coding"
-    model_name: gpt-5.1-codex
-    model_version: "2025-11-13"
-    capacity: 1000
-    rpm: 1000
-    tpm: 1000000
-
-  - name: gpt-5.1-codex-mini
-    category: "Coding"
-    model_name: gpt-5.1-codex-mini
-    model_version: "2025-11-13"
-    capacity: 1000
-    rpm: 1000
     tpm: 1000000
 
   # ── Embeddings ────────────────────────────────────────────────────────
