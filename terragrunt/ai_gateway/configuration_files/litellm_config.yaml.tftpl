@@ -52,14 +52,14 @@ model_list:
       tpm: 2000000
       tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2", "archived"]
 
-  - model_name: claude-sonnet-5-5
+  - model_name: anthropic-claude-sonnet-5.5
     litellm_params:
       model: us.anthropic.claude-sonnet-5-5
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
 %{ for effort in ["low", "medium", "high"] ~}
 
-  - model_name: claude-sonnet-5-5-${effort}
+  - model_name: anthropic-claude-sonnet-5.5-${effort}
     litellm_params:
       model: us.anthropic.claude-sonnet-5-5
       litellm_credential_name: aws_bedrock
@@ -67,14 +67,14 @@ model_list:
       tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
 %{ endfor ~}
 
-  - model_name: claude-opus-5-5
+  - model_name: anthropic-claude-opus-5.5
     litellm_params:
       model: us.anthropic.claude-opus-5-5
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
 %{ for effort in ["low", "medium", "high"] ~}
 
-  - model_name: claude-opus-5-5-${effort}
+  - model_name: anthropic-claude-opus-5.5-${effort}
     litellm_params:
       model: us.anthropic.claude-opus-5-5
       litellm_credential_name: aws_bedrock
@@ -105,7 +105,7 @@ model_list:
 
   # ── Meta Llama (cross-region inference profiles) ──────────────────────────
 
-  - model_name: meta-llama4-maverick
+  - model_name: meta-llama-4-maverick
     litellm_params:
       model: us.meta.llama4-maverick-17b-instruct-v1:0
       litellm_credential_name: aws_bedrock_us_east_1
@@ -113,13 +113,13 @@ model_list:
 
   # ── Cohere ───────────────────────────────────────────────────────────────
 
-  - model_name: cohere-embed-v4
+  - model_name: cohere-embed-4
     litellm_params:
       model: us.cohere.embed-v4:0
       litellm_credential_name: aws_bedrock
       tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
 
-  - model_name: cohere-rerank
+  - model_name: cohere-rerank-3.5
     litellm_params:
       model: cohere.rerank-v3-5:0
       litellm_credential_name: aws_bedrock
@@ -148,7 +148,7 @@ model_list:
       litellm_credential_name: aws_bedrock_us_east_1
       tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
 
-  - model_name: mistral-devstral
+  - model_name: mistral-devstral-2
     litellm_params:
       model: mistral.devstral-2-123b
       litellm_credential_name: aws_bedrock_us_east_1
@@ -508,7 +508,7 @@ model_list:
 
   # ---- ${d.category} ----
 %{ endif }
-  - model_name: ${d.name}
+  - model_name: ${lookup(d, "alias", d.name)}
     litellm_params:
       model: azure/${d.name}
       litellm_credential_name: azure_openai
@@ -518,7 +518,7 @@ model_list:
 %{ if contains(["gpt-5.6-terra", "gpt-5.6-luna", "gpt-5.6-sol"], d.name) ~}
 
   # Fixed reasoning effort aliases for clients that cannot pass reasoning_effort.
-  - model_name: ${d.name}-low
+  - model_name: ${lookup(d, "alias", d.name)}-low
     litellm_params:
       model: azure/${d.name}
       litellm_credential_name: azure_openai
@@ -527,7 +527,7 @@ model_list:
       tpm: ${d.tpm}
       tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"%{ if d.archived }, "archived"%{ endif }]
 
-  - model_name: ${d.name}-medium
+  - model_name: ${lookup(d, "alias", d.name)}-medium
     litellm_params:
       model: azure/${d.name}
       litellm_credential_name: azure_openai
@@ -536,7 +536,7 @@ model_list:
       tpm: ${d.tpm}
       tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"%{ if d.archived }, "archived"%{ endif }]
 
-  - model_name: ${d.name}-high
+  - model_name: ${lookup(d, "alias", d.name)}-high
     litellm_params:
       model: azure/${d.name}
       litellm_credential_name: azure_openai
@@ -545,7 +545,7 @@ model_list:
       tpm: ${d.tpm}
       tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"%{ if d.archived }, "archived"%{ endif }]
 
-  - model_name: ${d.name}-xhigh
+  - model_name: ${lookup(d, "alias", d.name)}-xhigh
     litellm_params:
       model: azure/${d.name}
       litellm_credential_name: azure_openai
@@ -554,7 +554,7 @@ model_list:
       tpm: ${d.tpm}
       tags: ["CEILING_UNCLASSIFIED", "azure:canadacentral"%{ if d.archived }, "archived"%{ endif }]
 
-  - model_name: ${d.name}-max
+  - model_name: ${lookup(d, "alias", d.name)}-max
     litellm_params:
       model: azure/${d.name}
       litellm_credential_name: azure_openai
@@ -566,7 +566,7 @@ model_list:
 %{ if contains(["gpt-5.4-mini", "gpt-5.3-codex"], d.name) && !d.archived ~}
 %{ for effort in ["low", "medium", "high"] ~}
 
-  - model_name: ${d.name}-${effort}
+  - model_name: ${lookup(d, "alias", d.name)}-${effort}
     litellm_params:
       model: azure/${d.name}
       litellm_credential_name: azure_openai
