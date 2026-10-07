@@ -14,6 +14,8 @@
 # when rendered into litellm_config.yaml.tftpl. `name` is used both as the
 # azurerm_cognitive_deployment name and as the `<name>` in the generated
 # `azure/<name>` litellm_params.model value, so it must be unique.
+# Optional `alias` sets the public LiteLLM name without renaming the deployment;
+# when omitted, the public name defaults to `name` for compatibility.
 #
 # model_version values below were confirmed available in the CDS-AI
 # subscription's ai-gateway-openai-account via:
@@ -54,6 +56,7 @@
 deployments:
   # ── Chat / reasoning ──────────────────────────────────────────────────
   - name: gpt-5.4-mini
+    alias: openai-gpt-5.4-mini
     category: "Chat / reasoning"
     model_name: gpt-5.4-mini
     model_version: "2026-03-17"
@@ -78,6 +81,7 @@ deployments:
 
   # ── Coding ────────────────────────────────────────────────────────────
   - name: gpt-5.3-codex
+    alias: openai-gpt-5.3-codex
     category: "Coding"
     model_name: gpt-5.3-codex
     model_version: "2026-02-24"
@@ -88,6 +92,7 @@ deployments:
   # ── Embeddings ────────────────────────────────────────────────────────
   # Stable, no retirement pressure.
   - name: text-embedding-3-large
+    alias: openai-text-embedding-3-large
     category: "Embeddings"
     model_name: text-embedding-3-large
     model_version: "1"
@@ -96,6 +101,7 @@ deployments:
     tpm: 1000000
 
   - name: text-embedding-3-small
+    alias: openai-text-embedding-3-small
     category: "Embeddings"
     model_name: text-embedding-3-small
     model_version: "1"

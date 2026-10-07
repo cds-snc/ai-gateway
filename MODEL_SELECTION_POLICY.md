@@ -23,6 +23,7 @@ these are the latest releases outside the configured catalog.
 7. Leave existing models tagged `archived` unchanged, including their aliases,
    reasoning settings, quotas, and routing. The curation rules below apply only
    to non-archived choices; archived models are retained for existing consumers.
+   The explicitly requested GPT-5.6 deduplication below is an exception.
 8. Keep only the newest configured version per distinct model family or role.
    Keep separate cost tiers or specialist capabilities only when they serve a
    distinct purpose, and reduce redundant size variants within a family.
@@ -41,10 +42,54 @@ restricted list.
 
 The October review removes 29 active aliases, reducing base choices from 49 to
 20. The eight adjustable reasoning models have three explicit presets each,
-giving 44 active aliases including presets. All 42 archived aliases are retained.
+giving 44 active aliases including presets. The initial curation preserved all
+42 archived aliases; subsequent GPT-5.6 deduplication removes 18 redundant
+archived aliases, leaving 24. All retained archived definitions are unchanged.
 Azure deployments are unchanged; their aliases are generated from the deployment
 YAML, and reasoning presets share the existing deployment rather than creating
 additional Azure resources.
+
+### Alias Naming
+
+Active aliases use lowercase provider-prefixed names:
+`<provider>-<family>-<version-or-tier>[-<effort>]`. Separate words with hyphens,
+use dots for multi-part numeric versions (for example `5.5` and `3.5`), and
+keep official family or tier identifiers such as `x5` and `27b`. Do not include
+the hosting platform, region, inference-profile prefix, or deployment date.
+Reasoning presets append `-low`, `-medium`, or `-high` to the base alias.
+Archived aliases retain their existing names for compatibility.
+
+| Previous active alias | Consistent alias |
+| --- | --- |
+| `claude-sonnet-5-5` | `anthropic-claude-sonnet-5.5` |
+| `claude-opus-5-5` | `anthropic-claude-opus-5.5` |
+| `meta-llama4-maverick` | `meta-llama-4-maverick` |
+| `cohere-embed-v4` | `cohere-embed-4` |
+| `cohere-rerank` | `cohere-rerank-3.5` |
+| `mistral-devstral` | `mistral-devstral-2` |
+| `gpt-5.4-mini` | `openai-gpt-5.4-mini` |
+| `gpt-5.3-codex` | `openai-gpt-5.3-codex` |
+| `text-embedding-3-large` | `openai-text-embedding-3-large` |
+| `text-embedding-3-small` | `openai-text-embedding-3-small` |
+
+These renames also apply to each affected model's reasoning presets, keeping
+the same effort suffix. Other active aliases already follow this convention.
+Clients and virtual-key model allowlists must use the new names after deployment;
+the previous active names are not retained as duplicate aliases. Routing,
+reasoning settings, quotas, and tags are unchanged. Azure's optional `alias`
+field controls the public name independently of `name`, preserving existing
+deployment names and Terraform resource addresses.
+
+### GPT-5.6 Deduplication
+
+GPT-5.6 had two archived Bedrock alias sets, `openai-gpt-5.6-*` and `gpt-5.6-*`,
+with identical routing and reasoning settings. Keep the former Azure deployment
+compatibility names `gpt-5.6-terra`, `gpt-5.6-luna`, and `gpt-5.6-sol`, plus
+their `-low`, `-medium`, `-high`, `-xhigh`, and `-max` presets. Remove the 18
+matching `openai-gpt-5.6-*` aliases as an explicit exception to archive
+preservation. Clients and key model allowlists using a removed alias must switch
+to the same name without the `openai-` prefix. This does not change the underlying
+model, reasoning level, or AWS credential.
 
 | Provider | Retained non-archived families | Selection rationale |
 | --- | --- | --- |

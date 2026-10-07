@@ -192,6 +192,13 @@ bash scripts/list-models.sh <virtual_key> <litellm_base_url>
   --key-alias haiku-client
 ```
 
+To set a USD spend limit, choose whether it is one-time (never resets) or monthly (resets on the first day of each month at midnight UTC):
+
+```bash
+./scripts/create_virtual_key.sh --url <litellm_base_url> --key-alias haiku-client --max-budget 25 --budget-type one-time
+./scripts/create_virtual_key.sh --url <litellm_base_url> --key-alias haiku-client --max-budget 25 --budget-type monthly
+```
+
 - Send a test chat completion request through a virtual key:
 
 ```bash
