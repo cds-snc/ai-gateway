@@ -29,8 +29,7 @@ resource "aws_iam_role_policy" "litellm_task" {
         Effect = "Allow"
         Action = [
           "bedrock:InvokeModel",
-          "bedrock:InvokeModelWithResponseStream",
-          "bedrock:Rerank"
+          "bedrock:InvokeModelWithResponseStream"
         ]
         Resource = [
           "arn:${data.aws_partition.current.partition}:bedrock:*::foundation-model/*",
@@ -38,6 +37,12 @@ resource "aws_iam_role_policy" "litellm_task" {
           "arn:${data.aws_partition.current.partition}:bedrock:*:${data.aws_caller_identity.current.account_id}:inference-profile/*",
           "arn:${data.aws_partition.current.partition}:bedrock:*:${data.aws_caller_identity.current.account_id}:application-inference-profile/*"
         ]
+      },
+      {
+        Sid      = "AllowBedrockRerank"
+        Effect   = "Allow"
+        Action   = ["bedrock:Rerank"]
+        Resource = "*"
       },
       {
         Sid      = "AllowBedrockMantleInvoke"

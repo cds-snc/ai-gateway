@@ -116,8 +116,8 @@ model_list:
   - model_name: cohere-embed-4
     litellm_params:
       model: us.cohere.embed-v4:0
-      litellm_credential_name: aws_bedrock
-      tags: ["CEILING_UNCLASSIFIED", "aws:ca-central-1", "inferred:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
+      litellm_credential_name: aws_bedrock_us_east_1
+      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1", "inferred:us-east-2", "inferred:us-west-2"]
 
   - model_name: cohere-rerank-3.5
     litellm_params:
@@ -480,6 +480,50 @@ model_list:
       litellm_credential_name: aws_bedrock_us_east_1
       reasoning_effort: ${effort}
       tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+%{ endfor ~}
+
+  # LiteLLM v1.106.x has no built-in openai.gpt-6.1-terra entry. Without this
+  # model_info, chat requests miss the Responses bridge and reasoning_effort is
+  # rejected. Values mirror bedrock_mantle/openai.gpt-6.1-terra in LiteLLM main
+  # (commit 4a4c9cf); remove once the pinned release includes the model.
+%{ for effort in ["", "low", "medium", "high"] ~}
+
+  - model_name: openai-gpt-6.1-terra%{ if effort != "" }-${effort}%{ endif }
+    litellm_params:
+      model: bedrock_mantle/openai.gpt-6.1-terra
+      litellm_credential_name: aws_bedrock_us_east_1
+%{ if effort != "" ~}
+      reasoning_effort: ${effort}
+%{ endif ~}
+      tags: ["CEILING_UNCLASSIFIED", "aws:us-east-1"]
+    model_info:
+      litellm_provider: bedrock_mantle
+      mode: responses
+      supported_endpoints: ["/v1/chat/completions", "/v1/responses"]
+      use_openai_responses_path: true
+      max_input_tokens: 922000
+      max_output_tokens: 128000
+      input_cost_per_token: 0.0000011
+      input_cost_per_token_above_272k_tokens: 0.0000022
+      output_cost_per_token: 0.0000055
+      output_cost_per_token_above_272k_tokens: 0.00000825
+      cache_creation_input_token_cost: 0.000001375
+      cache_creation_input_token_cost_above_272k_tokens: 0.00000275
+      cache_read_input_token_cost: 0.000000055
+      cache_read_input_token_cost_above_272k_tokens: 0.00000011
+      supported_modalities: ["text", "image"]
+      supported_output_modalities: ["text"]
+      supports_function_calling: true
+      supports_max_reasoning_effort: true
+      supports_minimal_reasoning_effort: false
+      supports_none_reasoning_effort: true
+      supports_prompt_cache_breakpoint: true
+      supports_prompt_caching: true
+      supports_reasoning: true
+      supports_response_schema: true
+      supports_tool_choice: true
+      supports_vision: true
+      supports_xhigh_reasoning_effort: true
 %{ endfor ~}
 
   # ── Writer ─────────────────────────────────────────────────────────────────

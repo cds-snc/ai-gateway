@@ -114,6 +114,8 @@ Lite, so removing Palmyra Vision does not remove image understanding.
 The old Canada-only `amazon-nova-lite` chat route is removed in favor of Nova 2
 Lite's US cross-region profile. This is not a Canada-only replacement; consumers
 requiring Canadian-only chat processing need a separately verified current model.
+For `amazon-nova-2-lite-high`, omit `max_tokens`: Bedrock rejects that field when
+Nova 2 reasoning is set to high. Low- and medium-effort aliases can use it.
 No removed alias is silently redirected to a different model. Keys or clients
 referencing removed non-archived aliases must select a retained model.
 
