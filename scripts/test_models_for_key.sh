@@ -6,7 +6,7 @@ BASE_URL="https://ai.cdssandbox.xyz"
 API_KEY="${LITELLM_API_KEY:-}"
 PROMPT="Write a haiku about Canada"
 MAX_TOKENS="1024"
-TIMEOUT="30"
+TIMEOUT="120"
 OUTPUT_DIR=""
 VERBOSE="false"
 

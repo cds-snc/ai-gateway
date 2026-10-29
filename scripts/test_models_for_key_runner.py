@@ -178,8 +178,13 @@ def command_run(args):
             request_payload = {
                 "model": model_id,
                 "messages": [{"role": "user", "content": args.prompt}],
-                "max_tokens": args.max_tokens,
             }
+            is_nova_2_high_effort = (
+                model_id.startswith("amazon-nova-2-lite-")
+                and model_id.endswith("-high")
+            )
+            if not is_nova_2_high_effort:
+                request_payload["max_tokens"] = args.max_tokens
 
         body = json.dumps(request_payload)
         cmd = [
