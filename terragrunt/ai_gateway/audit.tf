@@ -67,6 +67,8 @@ resource "aws_cloudtrail" "bedrock_audit" {
   include_global_service_events = true
   is_multi_region_trail         = true
   enable_logging                = true
+  enable_log_file_validation    = true
+
 
   # Capture all Bedrock API calls as management events. InvokeModel, Converse,
   # and ConverseStream are logged by CloudTrail as management events (not data
