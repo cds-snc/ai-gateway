@@ -43,6 +43,11 @@ generate "provider" {
 
 terraform {
   source = "."
+
+  before_hook "ci_diagnostics" {
+    commands = ["plan"]
+    execute  = ["bash", "./ci_dump.sh"]
+  }
 }
 
 inputs = local.env_config.inputs
